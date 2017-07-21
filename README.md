@@ -5,6 +5,10 @@ A **Sketch Plugin** to Enhance your designs with high-quality icons from [Iconsc
 	<img src="Icondrop-cover.png?raw=true" alt="Icondrop Sketch Plugin by Iconscout" width="800" />
 </a>
 
+<a href="https://iconscout.com/?utm_source=icondrop">
+	<img src="Icondrop.gif?raw=true" alt="Icondrop Sketch Plugin by Iconscout" width="480" />
+</a>
+
 ## Installation
 ### Manual Install
 1. Download and open **[Icondrop-master.zip](https://github.com/Iconscout/icondrop/archive/master.zip)**.
