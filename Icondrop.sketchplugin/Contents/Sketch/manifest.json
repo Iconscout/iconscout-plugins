@@ -1,0 +1,26 @@
+{
+  "name" : "Icondrop",
+  "identifier" : "com.iconscout.sketch.icondrop",
+  "description": "Get access to 300,000+ icons right into Sketch App",
+  "version" : "1.0.0",
+  "icon" : "https://raw.githubusercontent.com/Iconscout/icondrop/master/Icondrop-logo.png",
+  "homepage": "https://iconscout.com",
+  "author" : "Iconscout",
+  "authorEmail": "contact@iconscout.com",
+  "appcast": "https://raw.githubusercontent.com/Iconscout/icondrop/master/Icondrop.sketchplugin/Contents/Sketch/appcast.xml",
+  "commands" : [{
+    "name" : "Icondrop",
+    "script" : "main.cocoascript",
+    "handler" : "searchIcons",
+    "identifier" : "icondrop",
+    "description" : "Get access to 300,000+ icons right into Sketch App",
+    "icon" : "https://raw.githubusercontent.com/Iconscout/icondrop/master/Icondrop-logo.png",
+    "shortcut": "cmd shift i"
+  }],
+  "menu" : {
+    "items" : [
+      "icondrop"
+    ],
+    "isRoot": true
+  }
+}

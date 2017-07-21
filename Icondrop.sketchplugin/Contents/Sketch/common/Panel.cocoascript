@@ -1,0 +1,73 @@
+function showPanel(options) {
+  var context = options.context;
+  var webviewResource = options.webviewResource;
+  var panelSettings = options.panelSettings;
+  var delegateListeners = options.delegateListeners;
+  var panelData = options.panelData;
+
+  try {
+    var resourcePath = context.plugin.urlForResourceNamed(webviewResource).path();
+    var timestamp = Date.now();
+    var url = encodeURI('file://' + resourcePath + '#' + timestamp);
+
+    // Main window
+    var title = "Icondrop by Iconscout";
+    var identifier = getIdentifier(context);
+    var threadDictionary = NSThread.mainThread().threadDictionary();
+
+    if (threadDictionary[identifier]) {
+      return;
+    }
+
+    var frame = NSMakeRect(0, 0, panelSettings.width, panelSettings.height);
+
+    var panel = NSPanel.alloc().init();
+    panel.setTitle(title);
+    panel.setTitlebarAppearsTransparent(true);
+
+    panel.standardWindowButton(NSWindowCloseButton).setHidden(false);
+    panel.standardWindowButton(NSWindowMiniaturizeButton).setHidden(true);
+    panel.standardWindowButton(NSWindowZoomButton).setHidden(true);
+
+    panel.setFrame_display(frame, false);
+    panel.setStyleMask(NSTexturedBackgroundWindowMask | NSTitledWindowMask | NSClosableWindowMask);
+    panel.setBackgroundColor(panelSettings.backgroundColor);
+
+    threadDictionary[identifier] = panel;
+    COScript.currentCOScript().setShouldKeepAround_(true);
+
+    var contentView = panel.contentView();
+    var webView = WebView.alloc().initWithFrame(NSMakeRect(0, 0, panelSettings.width, panelSettings.height));
+
+    var delegate = new MochaJSDelegate(delegateListeners);
+
+    contentView.setWantsLayer(true);
+    contentView.layer().setFrame( contentView.frame() );
+    contentView.layer().setMasksToBounds(true);
+
+    webView.setBackgroundColor(panelSettings.backgroundColor);
+    webView.setFrameLoadDelegate_(delegate.getClassInstance());
+    // Put data in Window Panel
+    var script = "window.localData=" + JSON.stringify(panelData);
+    webView.stringByEvaluatingJavaScriptFromString(script);
+    webView.setMainFrameURL_(url);
+
+    contentView.addSubview(webView);
+
+    var closeButton = panel.standardWindowButton(NSWindowCloseButton);
+    closeButton.setCOSJSTargetFunction(function(sender) {
+      COScript.currentCOScript().setShouldKeepAround(false);
+      threadDictionary.removeObjectForKey(identifier);
+      panel.close();
+    });
+    closeButton.setAction("callAction:");
+
+    panel.becomeKeyWindow();
+    panel.setLevel(NSFloatingWindowLevel);
+    panel.center();
+    panel.makeKeyAndOrderFront(nil);
+    
+  } catch(e) {
+    log(e);
+  }
+}

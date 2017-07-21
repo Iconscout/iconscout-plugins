@@ -1,0 +1,77 @@
+@import 'common/MochaJSDelegate.js';
+@import 'common/Panel.cocoascript';
+@import 'common/PlaceSVG.js';
+@import 'common/SelectedShape.js';
+@import 'common/Storage.js';
+@import 'common/Url.js';
+@import 'common/Message.js';
+@import 'common/Manifest.js';
+
+function searchIcons(context) {
+  var webviewResource = 'index.html';
+  
+  loadManifest(context);
+
+  var panelData = Storage.loadMany(['currentVersion', 'manifest', 'gaUid', 'user_auth', 'user_info']);
+
+  // log("Plugin Current Version is " + currentVersion);
+
+  var panelSettings = {
+    width: 390,
+    height: 490,
+    backgroundColor: NSColor.whiteColor()
+  };
+
+  var delegateListeners = {
+    "webView:didChangeLocationWithinPageForFrame:": function(webView, webFrame) {
+      var panel = webView.superview().window();
+      var windowObject = webView.windowScriptObject();
+      var request = NSURL.URLWithString(webView.mainFrameURL()).fragment();
+
+      // Parse data as we will receive the object as String
+      var data = JSON.parse(windowObject.valueForKey("data"));
+
+      var actions = {
+        putValue: function() {
+          Storage.put(data.key, data.value);
+        },
+
+        clearValue: function() {
+          Storage.clear(data.key);
+        },
+
+        insertIcon: function () {
+          placeFile({
+            url: data.url,
+            name: data.name,
+            type: data.type
+          }, context);
+        },
+
+        openUrl: function () {
+          openURL(data.url);
+        },
+
+        showMessage: function () {
+          showMessage(data.message, context);
+        },
+
+        log: function () {
+          log(data);
+        }
+      };
+
+      if(actions.hasOwnProperty(request)) {
+        actions[request]();
+      }
+    }
+  }
+
+  showPanel({
+    context: context,
+    webviewResource: webviewResource,
+    panelSettings: panelSettings,
+    delegateListeners: delegateListeners,
+    panelData: panelData
+  });
+}
