@@ -10,6 +10,13 @@ A **Sketch Plugin** to Enhance your designs with high-quality icons from [Iconsc
 </a>
 
 ## Installation
+### Easy Install
+* With <a href="http://sketchrunner.com/">Sketch Runner</a>, just go to the install command and search for **Icondrop**. Runner allows you to manage plugins and do much more to speed up your workflow in Sketch. <a href="http://sketchrunner.com/">Download Runner here</a>.
+
+<a href="http://bit.ly/SketchRunnerWebsite" rel="nofollow" title="Works with Sketch Runner">
+  <img width="160" height="41" src="http://sketchrunner.com/img/badge_blue.png" >
+</a>
+
 ### Manual Install
 1. Download and open **[Icondrop-master.zip](https://github.com/Iconscout/icondrop/archive/master.zip)**.
 2. Double click on **Icondrop.sketchplugin** to install.  
