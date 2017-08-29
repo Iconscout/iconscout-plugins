@@ -1,8 +1,8 @@
 {
-  "main.css": "static/css/main.cfd140e6.css",
-  "main.css.map": "static/css/main.cfd140e6.css.map",
-  "main.js": "static/js/main.eba78af9.js",
-  "main.js.map": "static/js/main.eba78af9.js.map",
+  "main.css": "static/css/main.62522457.css",
+  "main.css.map": "static/css/main.62522457.css.map",
+  "main.js": "static/js/main.10aa40fc.js",
+  "main.js.map": "static/js/main.10aa40fc.js.map",
   "static\\media\\Lato-Black.ttf": "static/media/Lato-Black.77d35374.ttf",
   "static\\media\\Lato-Bold.ttf": "static/media/Lato-Bold.44dfe8cc.ttf",
   "static\\media\\Lato-Hairline.ttf": "static/media/Lato-Hairline.db15ac79.ttf",
@@ -16,7 +16,8 @@
   "static\\media\\NunitoSans-Regular.ttf": "static/media/NunitoSans-Regular.fb98ed17.ttf",
   "static\\media\\NunitoSans-SemiBold.ttf": "static/media/NunitoSans-SemiBold.9c443ad7.ttf",
   "static\\media\\icon-back.svg": "static/media/icon-back.4c7be5bc.svg",
-  "static\\media\\icon-download.svg": "static/media/icon-download.012c24d1.svg",
+  "static\\media\\icon-download.svg": "static/media/icon-download.ad0b5424.svg",
+  "static\\media\\icon-downloads.svg": "static/media/icon-downloads.012c24d1.svg",
   "static\\media\\icon-scout.svg": "static/media/icon-scout.a64a8ee8.svg",
   "static\\media\\no-results.svg": "static/media/no-results.e43118a5.svg"
 }

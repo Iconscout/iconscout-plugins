@@ -34,4 +34,4 @@ Storage = {
             return value;
         }
     }
-}
+};

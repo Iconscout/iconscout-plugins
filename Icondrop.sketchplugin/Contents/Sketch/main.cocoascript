@@ -17,8 +17,8 @@ function searchIcons(context) {
   // log("Plugin Current Version is " + currentVersion);
 
   var panelSettings = {
-    width: 390,
-    height: 490,
+    width: 400,
+    height: 550,
     backgroundColor: NSColor.whiteColor()
   };
 

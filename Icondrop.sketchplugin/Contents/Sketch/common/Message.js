@@ -1,3 +1,3 @@
-showMessage = (message, context) => {
+function showMessage (message, context) {
 	context.document.showMessage(message);
 }

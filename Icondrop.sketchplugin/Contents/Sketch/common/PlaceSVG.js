@@ -1,4 +1,4 @@
-const placeFile = (file, context) => {
+function placeFile (file, context) {
     var fileUrl = file.url;
     var name = file.name;
 
@@ -15,7 +15,7 @@ const placeFile = (file, context) => {
 
     var layers = [];
     
-    selection.iterate((layer) => {
+    selection.iterate(function (layer) {
         layers.push(layer);
     });    
 
@@ -85,7 +85,7 @@ const placeFile = (file, context) => {
 
 
 // Decide the frame of the frame based on selected object or default frame (location and size)
-const getFrameSizing = (width, height, selectedObject, api) => {
+function getFrameSizing (width, height, selectedObject, api) {
 
     // Default dimentions
     var rect = {
@@ -93,7 +93,7 @@ const getFrameSizing = (width, height, selectedObject, api) => {
         y: 0,
         width: 512,
         height: 512
-    }
+    };
 
     // Decide the output frame dimention for reference
     var frame = (selectedObject && selectedObject.isShape) ? selectedObject.frame : rect;

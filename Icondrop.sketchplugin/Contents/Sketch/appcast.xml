@@ -3,8 +3,22 @@
   <channel>
     <title>Icondrop by Iconscout</title>
     <link>https://raw.githubusercontent.com/Iconscout/icondrop/master/Icondrop.sketchplugin/Contents/Sketch/appcast.xml</link>
-    <description>Get access to 300,000+ icons right into Sketch App</description>
+    <description>Get access to 500,000+ icons right into Sketch App</description>
     <language>en</language>
+    <item>
+      <title>1.0.1</title>
+      <description>
+        <![CDATA[
+          <ul>
+            <li>Minor Bug Fixes</li>
+            <li>Bug fix - Plugin not loading</li>
+            <li>Bug fix - Icons not loading for some users</li>
+          </ul>
+        ]]>
+      </description>
+      <pubDate>Mon, 29 August 2017 11:08:42 +0000</pubDate>
+      <enclosure url="https://github.com/Iconscout/icondrop/releases/download/1.0.1/Icondrop.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
+    </item>
     <item>
       <title>1.0.0</title>
       <description>
