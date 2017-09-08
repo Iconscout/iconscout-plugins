@@ -1,5 +1,5 @@
 # Icondrop by Iconscout
-A **Sketch Plugin** to Enhance your designs with high-quality icons from [Iconscout](https://iconscout.com/?utm_source=icondrop).
+A **Sketch Plugin & Adobe CC Extension (Photoshop & Illustrator)** to Enhance your designs with high-quality icons from [Iconscout](https://iconscout.com/?utm_source=icondrop).
 
 <a href="https://iconscout.com/icondrop?utm_source=icondrop">
 	<img src="Icondrop-sketch-cover.png?raw=true" alt="Icondrop Sketch Plugin by Iconscout" width="400" /><img src="Icondrop-adobe-cover.png?raw=true" alt="Icondrop Adobe Plugin by Iconscout" width="400" />
