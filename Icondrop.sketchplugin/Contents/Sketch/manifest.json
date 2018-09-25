@@ -3,7 +3,7 @@
   "identifier": "com.iconscout.sketch.icondrop",
   "description": "Get access to 2,000,000+ Icons, Illustrations & Stock Photos right into Sketch App",
   "version": "2.0.0",
-  "icon": "https://raw.githubusercontent.com/Iconscout/icondrop/master/favicon-96x96.png",
+  "icon" : "icons/favicon-64x64.png",
   "homepage": "https://iconscout.com",
   "author": "Iconscout",
   "authorEmail": "support@iconscout.com",
@@ -16,7 +16,7 @@
       "script": "index.js",
       "identifier": "icondrop",
       "description": "Get access to 2,000,000+ Icons, Illustrations & Stock Photos right into Sketch App",
-      "icon": "https://raw.githubusercontent.com/Iconscout/icondrop/master/favicon-96x96.png",
+      "icon": "icons/favicon-64x64.png",
       "shortcut": "cmd shift i"
     }
   ],
