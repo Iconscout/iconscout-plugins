@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>Icondrop by Iconscout</title>
+    <link>https://raw.githubusercontent.com/Iconscout/icondrop/master/.appcast.xml</link>
+    <description>Get access to 2 million+ icons, Illustrations & Stock Photos right into Sketch App</description>
+    <language>en</language>
+    <item>
+      <title>2.0.0</title>
+      <description>
+        <![CDATA[
+          <ul>
+            <li>With release of Illustrations and Stock photos, access all the design resource in a single plugin.</li>
+            <li>Introducing Prototype Mode.</li>
+            <li>Pick you favorite designers and search from their profile easily.</li>
+            <li>Now support for dark mode.</li>
+          </ul>
+        ]]>
+      </description>
+      <pubDate>Tue, 25 September 2018 11:08:42 +0000</pubDate>
+      <enclosure url="https://github.com/Iconscout/icondrop/releases/download/2.0.0/Icondrop.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
+    </item>
+    <item>
+      <title>1.0.1</title>
+      <description>
+        <![CDATA[
+          <ul>
+            <li>Minor Bug Fixes</li>
+            <li>Bug fix - Plugin not loading</li>
+            <li>Bug fix - Icons not loading for some users</li>
+          </ul>
+        ]]>
+      </description>
+      <pubDate>Mon, 29 August 2017 11:08:42 +0000</pubDate>
+      <enclosure url="https://github.com/Iconscout/icondrop/releases/download/1.0.1/Icondrop.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
+    </item>
+    <item>
+      <title>1.0.0</title>
+      <description>
+        <![CDATA[
+          <ul>
+            <li>First release of Icondrop by Iconscout</li>
+          </ul>
+        ]]>
+      </description>
+      <pubDate>Mon, 20 July 2017 12:10:42 +0000</pubDate>
+      <enclosure url="https://github.com/Iconscout/icondrop/releases/download/1.0.0/Icondrop.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
+    </item>
+  </channel>
+</rss>
