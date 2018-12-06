@@ -65,313 +65,17 @@ var exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-/* WEBPACK VAR INJECTION */(function(console) {/* globals log */
-
-if (true) {
-  var sketchUtils = __webpack_require__(7)
-  var sketchDebugger = __webpack_require__(9)
-  var actions = __webpack_require__(11)
-
-  function getStack() {
-    return sketchUtils.prepareStackTrace(new Error().stack)
-  }
-}
-
-console._skpmPrefix = 'console> '
-
-function logEverywhere(type, args) {
-  var values = Array.prototype.slice.call(args)
-
-  // log to the System logs
-  values.forEach(function(v) {
-    try {
-      log(console._skpmPrefix + indentString() + v)
-    } catch (e) {
-      log(v)
-    }
-  })
-
-  if (true) {
-    if (!sketchDebugger.isDebuggerPresent()) {
-      return
-    }
-
-    var payload = {
-      ts: Date.now(),
-      type: type,
-      plugin: String(context.scriptPath),
-      values: values.map(sketchUtils.prepareValue),
-      stack: getStack(),
-    }
-
-    sketchDebugger.sendToDebugger(actions.ADD_LOG, payload)
-  }
-}
-
-var indentLevel = 0
-function indentString() {
-  var indent = ''
-  for (var i = 0; i < indentLevel; i++) {
-    indent += '  '
-  }
-  if (indentLevel > 0) {
-    indent += '| '
-  }
-  return indent
-}
-
-var oldGroup = console.group
-
-console.group = function() {
-  // log to the JS context
-  oldGroup && oldGroup.apply(this, arguments)
-  indentLevel += 1
-  if (true) {
-    sketchDebugger.sendToDebugger(actions.GROUP, {
-      plugin: String(context.scriptPath),
-      collapsed: false,
-    })
-  }
-}
-
-var oldGroupCollapsed = console.groupCollapsed
-
-console.groupCollapsed = function() {
-  // log to the JS context
-  oldGroupCollapsed && oldGroupCollapsed.apply(this, arguments)
-  indentLevel += 1
-  if (true) {
-    sketchDebugger.sendToDebugger(actions.GROUP, {
-      plugin: String(context.scriptPath),
-      collapsed: true
-    })
-  }
-}
-
-var oldGroupEnd = console.groupEnd
-
-console.groupEnd = function() {
-  // log to the JS context
-  oldGroupEnd && oldGroupEnd.apply(this, arguments)
-  indentLevel -= 1
-  if (indentLevel < 0) {
-    indentLevel = 0
-  }
-  if (true) {
-    sketchDebugger.sendToDebugger(actions.GROUP_END, {
-      plugin: context.scriptPath,
-    })
-  }
-}
-
-var counts = {}
-var oldCount = console.count
-
-console.count = function(label) {
-  label = typeof label !== 'undefined' ? label : 'Global'
-  counts[label] = (counts[label] || 0) + 1
-
-  // log to the JS context
-  oldCount && oldCount.apply(this, arguments)
-  return logEverywhere('log', [label + ': ' + counts[label]])
-}
-
-var timers = {}
-var oldTime = console.time
-
-console.time = function(label) {
-  // log to the JS context
-  oldTime && oldTime.apply(this, arguments)
-
-  label = typeof label !== 'undefined' ? label : 'default'
-  if (timers[label]) {
-    return logEverywhere('warn', ['Timer "' + label + '" already exists'])
-  }
-
-  timers[label] = Date.now()
-  return
-}
-
-var oldTimeEnd = console.timeEnd
-
-console.timeEnd = function(label) {
-  // log to the JS context
-  oldTimeEnd && oldTimeEnd.apply(this, arguments)
-
-  label = typeof label !== 'undefined' ? label : 'default'
-  if (!timers[label]) {
-    return logEverywhere('warn', ['Timer "' + label + '" does not exist'])
-  }
-
-  var duration = Date.now() - timers[label]
-  delete timers[label]
-  return logEverywhere('log', [label + ': ' + (duration / 1000) + 'ms'])
-}
-
-var oldLog = console.log
-
-console.log = function() {
-  // log to the JS context
-  oldLog && oldLog.apply(this, arguments)
-  return logEverywhere('log', arguments)
-}
-
-var oldWarn = console.warn
-
-console.warn = function() {
-  // log to the JS context
-  oldWarn && oldWarn.apply(this, arguments)
-  return logEverywhere('warn', arguments)
-}
-
-var oldError = console.error
-
-console.error = function() {
-  // log to the JS context
-  oldError && oldError.apply(this, arguments)
-  return logEverywhere('error', arguments)
-}
-
-var oldAssert = console.assert
-
-console.assert = function(condition, text) {
-  // log to the JS context
-  oldAssert && oldAssert.apply(this, arguments)
-  if (!condition) {
-    return logEverywhere('assert', [text])
-  }
-  return undefined
-}
-
-var oldInfo = console.info
-
-console.info = function() {
-  // log to the JS context
-  oldInfo && oldInfo.apply(this, arguments)
-  return logEverywhere('info', arguments)
-}
-
-var oldClear = console.clear
-
-console.clear = function() {
-  oldClear && oldClear()
-  if (true) {
-    return sketchDebugger.sendToDebugger(actions.CLEAR_LOGS)
-  }
-}
-
-console._skpmEnabled = true
-
-module.exports = console
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+module.exports = require("sketch/dom");
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/* global NSURL NSImage MSApplicationMetadata MSImageData */
-
-// Fetch Image Data from url
-var fetchImageData = function fetchImageData(url) {
-  var nsUrl = NSURL.alloc().initWithString(url);
-  var newImage = NSImage.alloc().initByReferencingURL(nsUrl);
-  var imageData = null;
-
-  if (MSApplicationMetadata.metadata().appVersion < 47) {
-    imageData = MSImageData.alloc().initWithImage_convertColorSpace(newImage, false);
-  } else {
-    imageData = MSImageData.alloc().initWithImage(newImage);
-  }
-  return imageData;
-};
-
-exports["default"] = fetchImageData;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-/* eslint-disable no-not-accumulator-reassign/no-not-accumulator-reassign, no-var, vars-on-top, prefer-template, prefer-arrow-callback, func-names, prefer-destructuring, object-shorthand */
-
-module.exports = function prepareStackTrace(stackTrace) {
-  var stack = stackTrace.split('\n')
-  stack = stack.map(function (s) {
-    return s.replace(/\sg/, '')
-  })
-
-  stack = stack.map(function (entry) {
-    // entry is something like `functionName@path/to/my/file:line:column`
-    // or `path/to/my/file:line:column`
-    // or `path/to/my/file`
-    // or `path/to/@my/file:line:column`
-    var parts = entry.split('@')
-    var fn = parts.shift()
-    var filePath = parts.join('@') // the path can contain @
-
-    if (fn.indexOf('/Users/') === 0) {
-      // actually we didn't have a fn so just put it back in the filePath
-      filePath = fn + (filePath ? ('@' + filePath) : '')
-      fn = null
-    }
-
-    if (!filePath) {
-      // we should always have a filePath, so if we don't have one here, it means that the function what actually anonymous and that it is the filePath instead
-      filePath = entry
-      fn = null
-    }
-
-    var filePathParts = filePath.split(':')
-    filePath = filePathParts[0]
-
-    // the file is the last part of the filePath
-    var file = filePath.split('/')
-    file = file[file.length - 1]
-
-    return {
-      fn: fn,
-      file: file,
-      filePath: filePath,
-      line: filePathParts[1],
-      column: filePathParts[2],
-    }
-  })
-
-  return stack
-}
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-module.exports = function toArray(object) {
-  if (Array.isArray(object)) {
-    return object
-  }
-  var arr = []
-  for (var j = 0; j < (object || []).length; j += 1) {
-    arr.push(object[j])
-  }
-  return arr
-}
-
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports) {
 
 function EventEmitter () {}
@@ -633,23 +337,68 @@ module.exports = EventEmitter
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-module.exports = require("sketch/dom");
-
-/***/ }),
-/* 6 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(console) {
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _SketchPluginLog = __webpack_require__(17);
+
+var _SketchPluginLog2 = _interopRequireDefault(_SketchPluginLog);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var logger = new _SketchPluginLog2['default']();
+
+exports['default'] = logger;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// Context Helper
+var updateContext = function updateContext(context) {
+  var doc = NSDocumentController.sharedDocumentController().currentDocument();
+
+  if (MSApplicationMetadata.metadata().appVersion > 41.2) {
+    var selection = doc.selectedLayers().layers();
+  } else {
+    var selection = doc.selectedLayers();
+  }
+
+  return Object.assign({}, context, {
+    document: doc,
+    selection: selection
+  });
+};
+
+exports["default"] = updateContext;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 exports['default'] = function (context) {
+  _logger2['default'].setContext(context).setLogPrefix('Icondrop');
+
   // const urls = [
   //   'https://cdn.worldvectorlogo.com/logos/semaphore.svg',
   //   'https://cdn.worldvectorlogo.com/logos/facebook-messenger.svg',
@@ -669,13 +418,14 @@ exports['default'] = function (context) {
   // }))
 
   // insertSVGs(svgfiles, context)
+
   // const imgfiles = [1,2,5,40,45,50,23,63,23,12].map(i => ({
   //   url: `https://photographs-dev.s3.wasabisys.com/photo/free/thumb/${i}.jpg`,
   //   name: 'tarun',
   //   format: 'jpg'
   // }))
 
-  // fillShapes(imgfiles, context)
+  // insertOrFillImage(imgfiles, context, true)
 
   var options = {
     identifier: 'com.iconscout.sketch.icondrop',
@@ -688,17 +438,17 @@ exports['default'] = function (context) {
   };
 
   var browserWindow = new _sketchModuleWebView2['default'](options);
-  browserWindow.loadURL('https://sketch.iconscout.com/');
+  browserWindow.loadURL('https://sketch.iconscout.com/' + String(_manifest2['default'].version) + '/index.html');
   browserWindow.show();
 
   // Send Settings to Webview
   browserWindow.webContents.on('dom-ready', function () {
-    console.log('DOM Ready');
+    _logger2['default'].log('DOM Ready');
     var settings = {
       icondrop: _settings2['default'].settingForKey('icondrop')
     };
 
-    console.log('Settings sending to Webview', settings);
+    _logger2['default'].log('Settings sending to Webview', settings);
     browserWindow.webContents.executeJavaScript('onReceivePluginSettings(' + JSON.stringify(settings) + ')');
   });
 
@@ -706,13 +456,13 @@ exports['default'] = function (context) {
     var key = _ref.key,
         value = _ref.value;
 
-    console.log('setKey', key, value);
+    _logger2['default'].log('setKey', key, value);
     _settings2['default'].setSettingForKey(key, value);
   });
   browserWindow.webContents.on('clearKey', function (_ref2) {
     var key = _ref2.key;
 
-    console.log('clearKey', key);
+    _logger2['default'].log('clearKey', key);
     _settings2['default'].setSettingForKey(key, null);
   });
 
@@ -721,23 +471,35 @@ exports['default'] = function (context) {
   });
 
   browserWindow.webContents.on('insertSVG', function (file) {
-    console.log('insertSVG', file);
-    (0, _insert2['default'])([file], context, true);
+    _logger2['default'].log('insertSVG', file);
+    (0, _insert2['default'])([file], {
+      force: true,
+      context: context
+    });
   });
 
   browserWindow.webContents.on('insertRaster', function (file) {
-    console.log('insertImage', file);
-    (0, _fill2['default'])([file], context, true);
+    _logger2['default'].log('insertImage', file);
+    (0, _Snippets2['default'])([file], {
+      force: true,
+      mask: file.mask || false,
+      context: context
+    });
   });
 
   browserWindow.webContents.on('insertSVGs', function (files) {
-    console.log('insertSVGs', files);
-    (0, _insert2['default'])(files, context);
+    _logger2['default'].log('insertSVGs', files);
+    (0, _insert2['default'])(files, {
+      context: context
+    });
   });
 
   browserWindow.webContents.on('insertRasters', function (files) {
-    console.log('insertImages', files);
-    (0, _fill2['default'])(files, context);
+    _logger2['default'].log('insertImages', files);
+    (0, _Snippets2['default'])(files, {
+      mask: files[0].mask || false,
+      context: context
+    });
   });
 
   browserWindow.webContents.on('openURL', function (url) {
@@ -747,315 +509,60 @@ exports['default'] = function (context) {
   // context.document.showMessage("It's alive 🙌")
 };
 
-var _sketch = __webpack_require__(12);
+var _sketch = __webpack_require__(5);
 
 var _sketch2 = _interopRequireDefault(_sketch);
 
-var _settings = __webpack_require__(13);
+var _settings = __webpack_require__(6);
 
 var _settings2 = _interopRequireDefault(_settings);
 
-var _sketchModuleWebView = __webpack_require__(14);
+var _sketchModuleWebView = __webpack_require__(7);
 
 var _sketchModuleWebView2 = _interopRequireDefault(_sketchModuleWebView);
 
-var _insert = __webpack_require__(24);
+var _logger = __webpack_require__(2);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _insert = __webpack_require__(18);
 
 var _insert2 = _interopRequireDefault(_insert);
 
-var _fill = __webpack_require__(27);
+var _Snippets = __webpack_require__(21);
 
-var _fill2 = _interopRequireDefault(_fill);
+var _Snippets2 = _interopRequireDefault(_Snippets);
+
+var _manifest = __webpack_require__(22);
+
+var _manifest2 = _interopRequireDefault(_manifest);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var prepareValue = __webpack_require__(8)
-
-module.exports.toArray = __webpack_require__(3)
-module.exports.prepareStackTrace = __webpack_require__(2)
-module.exports.prepareValue = prepareValue
-module.exports.prepareObject = prepareValue.prepareObject
-module.exports.prepareArray = prepareValue.prepareArray
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable no-not-accumulator-reassign/no-not-accumulator-reassign, no-var, vars-on-top, prefer-template, prefer-arrow-callback, func-names, prefer-destructuring, object-shorthand */
-var prepareStackTrace = __webpack_require__(2)
-var toArray = __webpack_require__(3)
-
-function prepareArray(array, options) {
-  return array.map(function(i) {
-    return prepareValue(i, options)
-  })
-}
-
-function prepareObject(object, options) {
-  const deep = {}
-  Object.keys(object).forEach(function(key) {
-    deep[key] = prepareValue(object[key], options)
-  })
-  return deep
-}
-
-function getName(x) {
-  return {
-    type: 'String',
-    primitive: 'String',
-    value: String(x.name()),
-  }
-}
-
-function getSelector(x) {
-  return {
-    type: 'String',
-    primitive: 'String',
-    value: String(x.selector()),
-  }
-}
-
-function introspectMochaObject(value, options) {
-  options = options || {}
-  var mocha = value.class().mocha()
-  var introspection = {
-    properties: {
-      type: 'Array',
-      primitive: 'Array',
-      value: toArray(
-        mocha['properties' + (options.withAncestors ? 'WithAncestors' : '')]()
-      ).map(getName),
-    },
-    classMethods: {
-      type: 'Array',
-      primitive: 'Array',
-      value: toArray(
-        mocha['classMethods' + (options.withAncestors ? 'WithAncestors' : '')]()
-      ).map(getSelector),
-    },
-    instanceMethods: {
-      type: 'Array',
-      primitive: 'Array',
-      value: toArray(
-        mocha['instanceMethods' + (options.withAncestors ? 'WithAncestors' : '')]()
-      ).map(getSelector),
-    },
-    protocols: {
-      type: 'Array',
-      primitive: 'Array',
-      value: toArray(
-        mocha['protocols' + (options.withAncestors ? 'WithAncestors' : '')]()
-      ).map(getName),
-    },
-  }
-  if (mocha.treeAsDictionary && options.withTree) {
-    introspection.treeAsDictionary = {
-      type: 'Object',
-      primitive: 'Object',
-      value: prepareObject(mocha.treeAsDictionary())
-    }
-  }
-  return introspection
-}
-
-function prepareValue(value, options) {
-  var type = 'String'
-  var primitive = 'String'
-  const typeOf = typeof value
-  if (value instanceof Error) {
-    type = 'Error'
-    primitive = 'Error'
-    value = {
-      message: value.message,
-      name: value.name,
-      stack: prepareStackTrace(value.stack),
-    }
-  } else if (Array.isArray(value)) {
-    type = 'Array'
-    primitive = 'Array'
-    value = prepareArray(value, options)
-  } else if (value === null || value === undefined || Number.isNaN(value)) {
-    type = 'Empty'
-    primitive = 'Empty'
-    value = String(value)
-  } else if (typeOf === 'object') {
-    if (value.isKindOfClass && typeof value.class === 'function') {
-      type = String(value.class())
-      // TODO: Here could come some meta data saved as value
-      if (
-        type === 'NSDictionary' ||
-        type === '__NSDictionaryM' ||
-        type === '__NSSingleEntryDictionaryI' ||
-        type === '__NSDictionaryI' ||
-        type === '__NSCFDictionary'
-      ) {
-        primitive = 'Object'
-        value = prepareObject(Object(value), options)
-      } else if (
-        type === 'NSArray' ||
-        type === 'NSMutableArray' ||
-        type === '__NSArrayM' ||
-        type === '__NSSingleObjectArrayI' ||
-        type === '__NSArray0'
-      ) {
-        primitive = 'Array'
-        value = prepareArray(toArray(value), options)
-      } else if (
-        type === 'NSString' ||
-        type === '__NSCFString' ||
-        type === 'NSTaggedPointerString' ||
-        type === '__NSCFConstantString'
-      ) {
-        primitive = 'String'
-        value = String(value)
-      } else if (type === '__NSCFNumber' || type === 'NSNumber') {
-        primitive = 'Number'
-        value = 0 + value
-      } else if (type === 'MOStruct') {
-        type = String(value.name())
-        primitive = 'Object'
-        value = value.memberNames().reduce(function(prev, k) {
-          prev[k] = prepareValue(value[k], options)
-          return prev
-        }, {})
-      } else if (value.class().mocha) {
-        primitive = 'Mocha'
-        value = (options || {}).skipMocha ? type : introspectMochaObject(value, options)
-      } else {
-        primitive = 'Unknown'
-        value = type
-      }
-    } else {
-      type = 'Object'
-      primitive = 'Object'
-      value = prepareObject(value, options)
-    }
-  } else if (typeOf === 'function') {
-    type = 'Function'
-    primitive = 'Function'
-    value = String(value)
-  } else if (value === true || value === false) {
-    type = 'Boolean'
-    primitive = 'Boolean'
-  } else if (typeOf === 'number') {
-    primitive = 'Number'
-    type = 'Number'
-  }
-
-  return {
-    value,
-    type,
-    primitive,
-  }
-}
-
-module.exports = prepareValue
-module.exports.prepareObject = prepareObject
-module.exports.prepareArray = prepareArray
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable no-not-accumulator-reassign/no-not-accumulator-reassign, no-var, vars-on-top, prefer-template, prefer-arrow-callback, func-names, prefer-destructuring, object-shorthand */
-var remoteWebview = __webpack_require__(10)
-
-module.exports.identifier = 'skpm.debugger'
-
-module.exports.isDebuggerPresent = remoteWebview.isWebviewPresent.bind(
-  this,
-  module.exports.identifier
-)
-
-module.exports.sendToDebugger = function sendToDebugger(name, payload) {
-  return remoteWebview.sendToWebview(
-    module.exports.identifier,
-    'sketchBridge(' +
-      JSON.stringify({
-        name: name,
-        payload: payload,
-      }) +
-      ');'
-  )
-}
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-/* globals NSThread */
-
-var threadDictionary = NSThread.mainThread().threadDictionary()
-
-module.exports.isWebviewPresent = function isWebviewPresent (identifier) {
-  return !!threadDictionary[identifier]
-}
-
-module.exports.sendToWebview = function sendToWebview (identifier, evalString) {
-  if (!module.exports.isWebviewPresent(identifier)) {
-    throw new Error('Webview ' + identifier + ' not found')
-  }
-
-  var webview = threadDictionary[identifier]
-    .contentView()
-    .subviews()
-  webview = webview[webview.length - 1]
-
-  return webview.stringByEvaluatingJavaScriptFromString(evalString)
-}
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-module.exports.SET_TREE = 'elements/SET_TREE'
-module.exports.SET_PAGE_METADATA = 'elements/SET_PAGE_METADATA'
-module.exports.SET_LAYER_METADATA = 'elements/SET_LAYER_METADATA'
-module.exports.ADD_LOG = 'logs/ADD_LOG'
-module.exports.CLEAR_LOGS = 'logs/CLEAR_LOGS'
-module.exports.GROUP = 'logs/GROUP'
-module.exports.GROUP_END = 'logs/GROUP_END'
-module.exports.TIMER_START = 'logs/TIMER_START'
-module.exports.TIMER_END = 'logs/TIMER_END'
-module.exports.ADD_REQUEST = 'network/ADD_REQUEST'
-module.exports.SET_RESPONSE = 'network/SET_RESPONSE'
-module.exports.ADD_ACTION = 'actions/ADD_ACTION'
-module.exports.SET_SCRIPT_RESULT = 'playground/SET_SCRIPT_RESULT'
-
-
-/***/ }),
-/* 12 */
+/* 5 */
 /***/ (function(module, exports) {
 
 module.exports = require("sketch");
 
 /***/ }),
-/* 13 */
+/* 6 */
 /***/ (function(module, exports) {
 
 module.exports = require("sketch/settings");
 
 /***/ }),
-/* 14 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* let's try to match the API from Electron's Browser window
 (https://github.com/electron/electron/blob/master/docs/api/browser-window.md) */
-var EventEmitter = __webpack_require__(4)
-var buildBrowserAPI = __webpack_require__(15)
-var buildWebAPI = __webpack_require__(16)
-var fitSubviewToView = __webpack_require__(17)
-var dispatchFirstClick = __webpack_require__(18)
-var setDelegates = __webpack_require__(19)
+var EventEmitter = __webpack_require__(1)
+var buildBrowserAPI = __webpack_require__(8)
+var buildWebAPI = __webpack_require__(9)
+var fitSubviewToView = __webpack_require__(10)
+var dispatchFirstClick = __webpack_require__(11)
+var setDelegates = __webpack_require__(12)
 
 function BrowserWindow(options) {
   options = options || {}
@@ -1352,7 +859,7 @@ module.exports = BrowserWindow
 
 
 /***/ }),
-/* 15 */
+/* 8 */
 /***/ (function(module, exports) {
 
 var COLOR_CLASSES = [
@@ -1930,10 +1437,10 @@ module.exports = function(browserWindow, panel, webview) {
 
 
 /***/ }),
-/* 16 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var EventEmitter = __webpack_require__(4)
+var EventEmitter = __webpack_require__(1)
 
 // let's try to match https://github.com/electron/electron/blob/master/docs/api/web-contents.md
 module.exports = function buildAPI(browserWindow, panel, webview) {
@@ -1978,7 +1485,7 @@ module.exports = function buildAPI(browserWindow, panel, webview) {
 
 
 /***/ }),
-/* 17 */
+/* 10 */
 /***/ (function(module, exports) {
 
 function addEdgeConstraint(edge, subview, view, constant) {
@@ -2006,7 +1513,7 @@ module.exports = function fitSubviewToView(subview, view, constants) {
 
 
 /***/ }),
-/* 18 */
+/* 11 */
 /***/ (function(module, exports) {
 
 var tagsToFocus =
@@ -2036,12 +1543,12 @@ module.exports = function(webView, event) {
 
 
 /***/ }),
-/* 19 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ObjCClass = __webpack_require__(20).default
-var parseWebArguments = __webpack_require__(22)
-var CONSTANTS = __webpack_require__(23)
+var ObjCClass = __webpack_require__(13).default
+var parseWebArguments = __webpack_require__(15)
+var CONSTANTS = __webpack_require__(16)
 
 // We create one ObjC class for ourselves here
 var WindowDelegateClass
@@ -2266,7 +1773,7 @@ module.exports = function(browserWindow, panel, webview) {
 
 
 /***/ }),
-/* 20 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2278,7 +1785,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.SuperCall = undefined;
 exports.default = ObjCClass;
 
-var _runtime = __webpack_require__(21);
+var _runtime = __webpack_require__(14);
 
 exports.SuperCall = _runtime.SuperCall;
 
@@ -2334,7 +1841,7 @@ function getIvar(obj, name) {
 }
 
 /***/ }),
-/* 21 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2444,7 +1951,7 @@ const object_setInstanceVariable = exports.object_setInstanceVariable = CFunc("o
 addStructToBridgeSupport('objc_super', { type: objc_super_typeEncoding });
 
 /***/ }),
-/* 22 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = function(webArguments) {
@@ -2469,7 +1976,7 @@ module.exports = function(webArguments) {
 
 
 /***/ }),
-/* 23 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -2478,7 +1985,240 @@ module.exports = {
 
 
 /***/ }),
-/* 24 */
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/**
+ * Sketch Plugin Log
+ *
+ * @class Utils
+ * @classdesc A utility class for managing output to the Mac system log from your Sketch plugin.
+ * @constructor
+ *
+ * @example
+ * var logger = new SketchPluginLog();
+ * logger.setPrefix('myPluginName')
+ *   .setContext(sketchContext);
+ *
+ * // System log: simple message
+ * logger.log('Hello world!');
+ *
+ * // System log: CocoaScript object
+ * logger.logObject(myObject);
+ *
+ * // Write CocoaScript object to file:
+ * logger.debugObject(myObject)
+ *
+ * Default path for debugObject is:
+ * {Your plugin root path}/Sketch/debug/debug.log
+ */
+function SketchPluginLog() {
+    this.context = null;
+
+    this.settings = {
+        logPrefix: ' ',
+        debugLogPath: '/dev/null'
+    };
+}
+
+/**
+ * Set Log Prefix
+ *
+ * Sets a prefix for every log message sent to the system log file.
+ *
+ * @param {string} prefixString The string to use as prefix.
+ * @returns {SketchPluginLog}
+ */
+SketchPluginLog.prototype.setLogPrefix = function (prefixString) {
+    this.settings.logPrefix = prefixString;
+
+    return this;
+};
+
+/**
+ * Set Context
+ *
+ * Sets the current Sketch context.
+ *
+ * @param {object} context An object provided by Sketch with information on the currently running app and plugin.
+ * @returns {SketchPluginLog}
+ * @method
+ */
+SketchPluginLog.prototype.setContext = function (context) {
+    this.context = context;
+
+    if ('/dev/null' == this.settings.debugLogPath) {
+        this.settings.debugLogPath = this.context.scriptPath.stringByDeletingLastPathComponent() + '/debug/';
+    }
+
+    return this;
+};
+
+/**
+ * Set Debug Log Path
+ *
+ * Sets the path to a folder where debug dumps will be created at. This is not the path to your system log.
+ * See the `debugObject` method for more information.
+ *
+ * @param {string} logPathString The path to a folder to put log dumps in.
+ * @returns {SketchPluginLog}
+ */
+SketchPluginLog.prototype.setDebugLogPath = function (logPathString) {
+    // Assert value is a string
+    if (typeof logPathString !== 'string') {
+        this.log('Log path must be a string. Called `setLogPath` with non-string value.');
+        return this;
+    }
+
+    // Append a trailing slash if one isn't included
+    var lastChar = url.substr(-1);
+    if (lastChar != '/') {
+        logPathString += '/';
+    }
+
+    // Assign value
+    this.settings.debugLogPath = logpath;
+
+    return this;
+};
+
+/**
+ * Log
+ *
+ * Logs a simple message, prepended by the plugin name.
+ *
+ * @param {string} message
+ * @returns {SketchPluginLog}
+ * @method
+ */
+SketchPluginLog.prototype.log = function (message) {
+    // Check Sketch context exists
+    if (!this.hasOwnProperty('context') || _typeof(this.context) !== 'object') {
+        log(this.settings.logPrefix + ' : ' + 'Context not set for SketchPluginLog! Set it with `setContext`');
+    }
+
+    // Assert value is a string
+    if (typeof message !== 'string') {
+        this.log('Message must be a string. Called `log` with non-string value.');
+        return this;
+    }
+
+    this.context.api().log(this.settings.logPrefix + ' : ' + message);
+
+    return this;
+};
+
+/**
+ * Log Object
+ *
+ * Logs a CocoaScript object to the system log.
+ * Note that this method does not dump JavaScript objects.
+ *
+ * If your object is too large for Console to view, use the `debugObject` to write the log to a debug file instead.
+ *
+ * @param obj The object to log.
+ * @returns {SketchPluginLog}
+ */
+SketchPluginLog.prototype.logObject = function (obj) {
+    this.log('#####################################################################################');
+    this.log('# Dumping object ' + obj);
+    this.log('# Class: ' + obj.className());
+
+    this.log('### Properties');
+    this.log(obj['class']().mocha().properties());
+
+    this.log('### Properties With Ancestors');
+    this.log(obj['class']().mocha().propertiesWithAncestors());
+
+    this.log('### Methods');
+    this.log(obj['class']().mocha().classMethods());
+
+    this.log('### Methods With Ancestors');
+    this.log(obj['class']().mocha().classMethodsWithAncestors());
+
+    this.log('### Instance Methods');
+    this.log(obj['class']().mocha().instanceMethods());
+
+    this.log('### Instance Methods With Ancestors');
+    this.log(obj['class']().mocha().instanceMethodsWithAncestors());
+
+    this.log('### Protocols');
+    this.log(obj['class']().mocha().protocols());
+
+    this.log('### Protocols With Ancestors');
+    this.log(obj['class']().mocha().protocolsWithAncestors());
+
+    this.log('### Tree As Dictionary');
+    this.log(obj.treeAsDictionary());
+    this.log('#####################################################################################');
+
+    return this;
+};
+
+exports['default'] = SketchPluginLog;
+
+/**
+ * Debug Object
+ *
+ * Dumps a CocoaScript object to a `debug.log` file. This is useful for when an object dump is too large
+ * for the system log viewer Console.
+ *
+ * @param {object} obj
+ * @returns {SketchPluginLog}
+ */
+// SketchPluginLog.prototype.debugObject = function(obj) {
+//     var newline       = "\r\n";
+//     var doubleNewLine = newline + newline;
+
+//     if ('/dev/null' == this.settings.debugLogPath || !this.settings.debugLogPath) {
+//         this.log('Debug log path not set. Set it with the `setLogPath` method.');
+//         return this;
+//     }
+
+//     var output = 'Dump for object:' + obj + newline + 'Class: ' + obj.class() + newline
+//         + '#####################################################################################' + doubleNewLine
+
+//         + '### Properties' + newline + obj.class().mocha().properties() + doubleNewLine
+
+//         + '### Properties With Ancestors' + newline + obj.class().mocha().propertiesWithAncestors() + doubleNewLine
+
+//         + '### Methods' + newline + obj.class().mocha().classMethods() + doubleNewLine
+
+//         + '### Methods With Ancestors' + newline + obj.class().mocha().classMethodsWithAncestors() + doubleNewLine
+
+//         + '### Instance Methods' + newline + obj.class().mocha().instanceMethods() + doubleNewLine
+
+//         + '### Instance Methods With Ancestors' + newline + obj.class().mocha().instanceMethodsWithAncestors() + doubleNewLine
+
+//         + '### Protocols' + newline + obj.class().mocha().protocols() + doubleNewLine
+
+//         + '### Protocols With Ancestors' + newline + obj.class().mocha().protocolsWithAncestors() + doubleNewLine
+
+//         + '### Tree As Dictionary' + newline + obj.treeAsDictionary() + doubleNewLine;
+
+//     // Create debug folder if it doesn't exist
+//     var debugFolderPath = this.settings.debugLogPath;
+//     [[NSFileManager defaultManager] createDirectoryAtPath:debugFolderPath withIntermediateDirectories:true attributes:nil error:nil]
+
+//     // Write log to the debug file
+//     var outputNSString = [NSString stringWithFormat:"%@", output];
+//     var logPath = this.settings.debugLogPath + 'debug.log';
+//     [outputNSString writeToFile:logPath atomically:true encoding:NSUTF8StringEncoding error:nil];
+
+//     return this;
+// };
+
+/***/ }),
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2488,31 +2228,32 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _dom = __webpack_require__(5);
+var _dom = __webpack_require__(0);
 
 var _dom2 = _interopRequireDefault(_dom);
 
-var _insertSVG = __webpack_require__(25);
+var _insertSVG = __webpack_require__(19);
 
 var _insertSVG2 = _interopRequireDefault(_insertSVG);
 
+var _updateContext = __webpack_require__(3);
+
+var _updateContext2 = _interopRequireDefault(_updateContext);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-/* global MSShapeGroup MSLayerGroup MSArtboardGroup */
-/* eslint no-underscore-dangle: 0 */
-var insertSVGs = function insertSVGs(files, context) {
-  var force = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+var insertSVGs = function insertSVGs(files, _ref) {
+  var context = _ref.context,
+      _ref$force = _ref.force,
+      force = _ref$force === undefined ? true : _ref$force;
 
   // Reference to all the documents, pages, and selection
+  // context = updateContext(context)
   var api = context.api();
   // const { selection } = context;
+  var selection = (0, _updateContext2['default'])().selection;
 
-  var selection = [];
-  _dom2['default'].getSelectedDocument().selectedLayers.layers.forEach(function (layer) {
-    selection.push(layer._object);
-  });
-
-  if (selection.length === 0) {
+  if (selection.count() === 0) {
     // If it's force insert then insert image in center of screen
     if (force) {
       // Insert SVG in Current Artboard/Page
@@ -2524,8 +2265,9 @@ var insertSVGs = function insertSVGs(files, context) {
   } else {
     selection.forEach(function (layer, index) {
       // If files are SVG then only Shape Layers can be filled
-      if (!(layer instanceof MSShapeGroup || layer instanceof MSLayerGroup || layer instanceof MSArtboardGroup)) {
-        api.alert("Oops! Have you selected Shape or Group?", "You can insert SVGs in Shape Layers or Groups only.");
+
+      if (!(layer instanceof MSRectangleShape || layer instanceof MSOvalShape || layer instanceof MSShapeGroup || layer instanceof MSLayerGroup || layer instanceof MSArtboardGroup)) {
+        context.document.showMessage("Oops! Have you selected Shape or Group?", "You can insert SVGs in Shape Layers or Groups only.");
         return;
       }
 
@@ -2533,17 +2275,16 @@ var insertSVGs = function insertSVGs(files, context) {
       (0, _insertSVG2['default'])(layer, files[index], context);
     });
 
-    var layersToDelete = api.selectedDocument.selectedLayers;
-    layersToDelete.iterate(function (layer) {
-      layer.remove();
+    selection.forEach(function (layer) {
+      layer.removeFromParent();
     });
   }
-};
-
+}; /* global MSShapeGroup MSLayerGroup MSArtboardGroup */
+/* eslint no-underscore-dangle: 0 */
 exports['default'] = insertSVGs;
 
 /***/ }),
-/* 25 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2553,7 +2294,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _getFrameSize = __webpack_require__(26);
+var _getFrameSize = __webpack_require__(20);
 
 var _getFrameSize2 = _interopRequireDefault(_getFrameSize);
 
@@ -2614,7 +2355,7 @@ var replaceWithSVG = function replaceWithSVG(selected, _ref, context) {
 exports['default'] = replaceWithSVG;
 
 /***/ }),
-/* 26 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2654,69 +2395,92 @@ var getFrameSizing = function getFrameSizing(width, height, selectedObject, cont
 exports["default"] = getFrameSizing;
 
 /***/ }),
-/* 27 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(console) {
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _dom = __webpack_require__(5);
+var _logger = __webpack_require__(2);
 
-var _dom2 = _interopRequireDefault(_dom);
+var _logger2 = _interopRequireDefault(_logger);
 
-var _fetchImageData = __webpack_require__(1);
+var _updateContext = __webpack_require__(3);
 
-var _fetchImageData2 = _interopRequireDefault(_fetchImageData);
-
-var _fillLayerWithImage = __webpack_require__(28);
-
-var _fillLayerWithImage2 = _interopRequireDefault(_fillLayerWithImage);
-
-var _hasDifferentSymbols = __webpack_require__(29);
-
-var _hasDifferentSymbols2 = _interopRequireDefault(_hasDifferentSymbols);
-
-var _insertImage = __webpack_require__(30);
-
-var _insertImage2 = _interopRequireDefault(_insertImage);
+var _updateContext2 = _interopRequireDefault(_updateContext);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+// ###############################
+// Array.js
+// ###############################
+// Pop First Element and return
+var getFirstAndRemoveFromArray = function getFirstAndRemoveFromArray(array) {
+  return array.splice(0, 1)[0];
+};
+
+// ###############################
+// Symbols.js
+// ###############################
+
+// Check if all the select layers are of same type
+// We'll fill data only if all the layers are of same class
+var hasDifferentSymbols = function hasDifferentSymbols(layers) {
+  _logger2['default'].log('fn: hasDifferentSymbols');
+
+  var seenUUIDs = [];
+  layers.forEach(function (layer) {
+    if (layer instanceof MSSymbolInstance) {
+      var uuid = layer.symbolMaster().objectID();
+      if (seenUUIDs.indexOf(uuid) === -1) {
+        seenUUIDs.push(uuid);
+      }
+    }
+  });
+  if (seenUUIDs.length > 1) {
+    return true;
+  }
+  return false;
+};
+
 // Check & return First Symbol
 var getFirstSymbolMaster = function getFirstSymbolMaster(layers) {
+  _logger2['default'].log('fn: getFirstSymbolMaster');
+
   for (var i = 0; i < layers.length; i += 1) {
     if (layers[i] instanceof MSSymbolInstance) {
       var master = layers[i].symbolMaster();
       return master;
     }
   }
-
   return false;
-}; /* global NSMutableDictionary MSSymbolInstance MSSymbolInstance MSShapeGroup MSSymbolInstance MSLayerGroup */
-/* eslint no-param-reassign: 0 */
+};
 
+// Filter layers in which we can fill
+var filterLayersToOverrideable = function filterLayersToOverrideable(layers) {
+  _logger2['default'].log('fn: filterLayersToOverrideable');
 
-var filterLayersToOverrideable = function filterLayersToOverrideable(layers, format) {
   var possible = [];
 
   layers.forEach(function (layer) {
-    if (layer instanceof MSShapeGroup) {
-      var fills = layer.style().fills();
-      if (format === 'svg' || fills[0].image()) {
-        possible.push(layer);
-      }
+    var fills = layer.style().fills();
+    if (fills.count() && fills.firstObject().image()) {
+      possible.push(layer);
     }
   });
   return possible;
 };
+
 // Ask user for the Layer that needs to be Filled in case of Symbols
-var askForLayerToReplaceInSymbol = function askForLayerToReplaceInSymbol(master, format, context) {
+var askForLayerToReplaceInSymbol = function askForLayerToReplaceInSymbol(master, context) {
+  _logger2['default'].log('fn: askForLayerToReplaceInSymbol');
+
   var layersInMaster = master.children();
-  var filtered = filterLayersToOverrideable(layersInMaster, format);
+  var filtered = filterLayersToOverrideable(layersInMaster);
   var names = [];
 
   if (filtered.length === 0) {
@@ -2736,194 +2500,57 @@ var askForLayerToReplaceInSymbol = function askForLayerToReplaceInSymbol(master,
   return targetLayer;
 };
 
-// Pop First Element and return
-var getFirstAndRemoveFromArray = function getFirstAndRemoveFromArray(array) {
-  return array.splice(0, 1)[0];
+// ###############################
+// Images.js
+// ###############################
+// Fetch Image Data from url
+var fetchImageData = function fetchImageData(url) {
+  _logger2['default'].log('fn: fetchImageData');
+
+  var nsUrl = NSURL.alloc().initWithString(url);
+  var newImage = NSImage.alloc().initByReferencingURL(nsUrl);
+  var imageData = null;
+
+  if (MSApplicationMetadata.metadata().appVersion < 47) {
+    imageData = MSImageData.alloc().initWithImage_convertColorSpace(newImage, false);
+  } else {
+    imageData = MSImageData.alloc().initWithImage(newImage);
+  }
+  return imageData;
 };
-
-// Fill Layer with Image/Icon
-var fillLayer = function fillLayer(layer, files, context, layerOverride) {
-  console.log(layer, layer instanceof MSShapeGroup === true);
-  if (layer instanceof MSSymbolInstance) {
-    if (layerOverride) {
-      // update the mutable dictionary
-      if (layerOverride instanceof MSShapeGroup) {
-        var imageURLString = getFirstAndRemoveFromArray(files).url;
-        var imageData = (0, _fetchImageData2['default'])(imageURLString);
-
-        // Get existing overrides or make one if none exists
-        var newOverrides = layer.overrides();
-        if (newOverrides == null) {
-          newOverrides = {};
-        }
-
-        // Create mutable copy
-        var mutableOverrides = NSMutableDictionary.dictionaryWithDictionary(newOverrides);
-        mutableOverrides.setObject_forKey(NSMutableDictionary.dictionaryWithDictionary(newOverrides.objectForKey(0)), 0);
-
-        // Change item in the overrides
-        mutableOverrides.setObject_forKey(imageData, layerOverride.objectID());
-
-        // Change overrides
-        layer.overrides = mutableOverrides; // eslint-disable-line
-      }
-    }
-  } else if (layer instanceof MSShapeGroup) {
-    var _imageURLString = getFirstAndRemoveFromArray(files).url;
-    console.log('now fill data', _imageURLString);
-    (0, _fillLayerWithImage2['default'])(layer, _imageURLString);
-  } else if (layer instanceof MSLayerGroup) {
-    layer.layers().forEach(function (subLayer) {
-      fillLayer(subLayer, files, context);
-    });
-  }
-};
-
-// Fill Shapes with given Items
-var fillShapes = function fillShapes(files, context) {
-  var force = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-  var api = context.api();
-  // const { selection } = context;
-  var selection = [];
-  _dom2['default'].getSelectedDocument().selectedLayers.layers.forEach(function (layer) {
-    selection.push(layer._object);
-  });
-
-  console.log('insert image', files, context, force);
-  // Alert if user hasn't selected any Layers
-  if (selection.length === 0) {
-    // If it's force insert then insert image in center of screen
-    if (force) {
-      (0, _insertImage2['default'])(null, files[0], context);
-    } else {
-      // Else show message
-      context.document.showMessage("Oops! Please select one or more layers to fill and try again!");
-    }
-    return;
-  }
-
-  // Check if all the Layers are same
-  if ((0, _hasDifferentSymbols2['default'])(selection)) {
-    api.alert("Sorry! You can't fill data in different type of layers.", "Please select you have only one type of Symbol/Shape!");
-    return;
-  }
-
-  console.log('first symbol');
-
-  // Check if the selecte layer is Symbol then ask user which Layer needs to be replaced
-  var firstSymbolMaster = getFirstSymbolMaster(selection);
-
-  // If Images are being filled then Ask for the Shape in Symbol
-  var layerOverride = void 0;
-  if (firstSymbolMaster) {
-    console.log('ask replacement');
-    layerOverride = askForLayerToReplaceInSymbol(firstSymbolMaster, files[0].format, context);
-
-    if (!layerOverride) {
-      api.alert("Sorry! You can't fill in this Symbol.", "Please make sure that the symbol you've selected has at least one Shape with Image Fill.");
-      return;
-    }
-  }
-
-  console.log('filling layes', selection);
-
-  selection.forEach(function (layer) {
-    console.log('foreach selection');
-    fillLayer(layer, files, context, layerOverride);
-  });
-};
-
-exports['default'] = fillShapes;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(console) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _fetchImageData = __webpack_require__(1);
-
-var _fetchImageData2 = _interopRequireDefault(_fetchImageData);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
+// Fill Layer with Image
 var fillLayerWithImage = function fillLayerWithImage(layer, url) {
-  console.log('filll layer', url);
-  var imageData = (0, _fetchImageData2['default'])(url);
-  // Add new Fill
-  var fill = layer.style().fills().firstObject();
+  _logger2['default'].log('fn: fillLayerWithImage');
+
+  var imageData = fetchImageData(url);
+  var fills = layer.style().fills();
+
+  if (fills.count() === 0) {
+    // Use New API to create fill
+    var Style = __webpack_require__(0).Style;
+    var sketch = __webpack_require__(0);
+    var shape = sketch.fromNative(layer);
+    shape.style.fills = [{
+      color: '#c0ffee',
+      fill: Style.FillType.Color
+    }];
+  }
+
+  // Get First Fill
+  var fill = fills.firstObject();
   fill.setFillType(4);
   fill.setImage(imageData);
   fill.setPatternFillType(1);
 };
-
-exports['default'] = fillLayerWithImage;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/* global MSSymbolInstance */
-
-// Check if all the select layers are of same type
-// We'll fill data only if all the layers are of same class
-var hasDifferentSymbols = function hasDifferentSymbols(layers) {
-  var seenUUIDs = [];
-  for (var i = 0; i < layers.length; i += 1) {
-    if (layers[i] instanceof MSSymbolInstance) {
-      var uuid = layers[i].symbolMaster().objectID();
-      if (seenUUIDs.indexOf(uuid) === -1) {
-        seenUUIDs.push(uuid);
-      }
-    }
-  }
-  if (seenUUIDs.length > 1) {
-    return true;
-  }
-  return false;
-};
-
-exports["default"] = hasDifferentSymbols;
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _fetchImageData = __webpack_require__(1);
-
-var _fetchImageData2 = _interopRequireDefault(_fetchImageData);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-// import getFrameSizing from './getFrameSize'
-
-var insertImage = function insertImage(selected, _ref, context) {
+// Insert image in center of Screen
+var insertImage = function insertImage(_ref, context) {
   var url = _ref.url,
       name = _ref.name;
 
+  _logger2['default'].log('fn: insertImage');
+  _logger2['default'].log(context.api());
   var selectedPage = context.api().selectedDocument.selectedPage._object;
-  var image = (0, _fetchImageData2['default'])(url);
+  var image = fetchImageData(url);
   var layerImage = MSBitmapLayer.alloc().initWithFrame_image(NSMakeRect(0, 0, 500, 500), image);
 
   // Add to Current Page
@@ -2937,9 +2564,228 @@ var insertImage = function insertImage(selected, _ref, context) {
   var contentRect = context.api().selectedDocument._object.contentDrawView().visibleContentRect();
   size.setX(contentRect.origin.x + (contentRect.size.width - size.width()) / 2);
   size.setY(contentRect.origin.y + (contentRect.size.height - size.height()) / 2);
-}; /* global MSBitmapLayer NSMakeRect */
-/* eslint no-underscore-dangle: 0 */
-exports['default'] = insertImage;
+};
+
+// ###############################
+// Frames.js
+// ###############################
+// Decide the frame of the frame based on selected object or default frame (location and size)
+var getFrameFillSizing = function getFrameFillSizing(width, height, selectedObject, context) {
+  _logger2['default'].log('fn: getFrameFillSizing');
+
+  var api = context.api();
+
+  // Decide the output frame dimention for reference
+  var frame = selectedObject.frame();
+  var frameX = frame.x();
+  var frameY = frame.y();
+  var frameWidth = frame.width();
+  var frameHeight = frame.height();
+
+  var newWidth = width;
+  var newHeight = height;
+
+  // Decide the height and width
+  var ratio = width / height;
+  var frameRatio = frameWidth / frameHeight;
+
+  if (ratio > frameRatio) {
+    newHeight = frameHeight;
+    newWidth = newHeight * ratio;
+  } else {
+    newWidth = frameWidth;
+    newHeight = newWidth / ratio;
+  }
+
+  // Decide location
+  var newX = frameX + (frameWidth - newWidth) / 2;
+  var newY = frameY + (frameHeight - newHeight) / 2;
+  return new api.Rectangle(newX, newY, newWidth, newHeight);
+};
+
+// ###############################
+// Masking.js
+// ###############################
+// Mask Layer with Image
+var maskLayerWithImage = function maskLayerWithImage(layer, url) {
+  _logger2['default'].log('fn: maskLayerWithImage');
+
+  var artboard = layer.parentArtboard();
+  // Place in Artboard or Page
+  var placeInto = artboard ? artboard : page;
+
+  // If it's in group then place in group
+  var parentGroup = layer.parentGroup();
+  if (parentGroup) {
+    placeInto = parentGroup;
+  }
+
+  var image = fetchImageData(url);
+  var layerImage = MSBitmapLayer['new']();
+  layerImage.setImage(image);
+  layerImage.frame().size = layerImage.NSImage().size();
+
+  // layerImage.setName(name);
+  layerImage.setConstrainProportions(0);
+
+  // Set Size of Image
+  var frame = layerImage.frame();
+  var imageFrame = getFrameFillSizing(frame.width(), frame.height(), layer, context);
+  layerImage.frame().setWidth(imageFrame.width);
+  layerImage.frame().setHeight(imageFrame.height);
+  layerImage.frame().setX(imageFrame.x);
+  layerImage.frame().setY(imageFrame.y);
+
+  // create group
+  var groupLayer = MSLayerGroup['new']();
+  groupLayer.setName(layer.name());
+
+  layer.removeFromParent();
+
+  // create underlying mask
+  layer.setHasClippingMask(1);
+  layer.style().addStylePartOfType(0);
+  var layerStyle = layer.style().fills().firstObject();
+  layerStyle.setFillType(0);
+
+  groupLayer.addLayer(layer);
+  groupLayer.addLayer(layerImage);
+
+  // Add to Current Page
+  placeInto.addLayer(groupLayer);
+
+  // resize group to childrens dimension
+  groupLayer.resizeToFitChildrenWithOption(1);
+  groupLayer.setConstrainProportions(true);
+
+  // remove original image layer
+  // layer.removeFromParent
+};
+
+// ###############################
+// Layers.js
+// ###############################
+// Fill Layer
+var fillLayer = function fillLayer(layer, files, context, layerOverride) {
+  var mask = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+
+  _logger2['default'].log('fn: fillLayer');
+
+  if (layer instanceof MSSymbolInstance) {
+    if (layerOverride) {
+      // update the mutable dictionary
+      var imageURLString = getFirstAndRemoveFromArray(files).url;
+      var imageData = fetchImageData(imageURLString);
+
+      // Get existing overrides or make one if none exists
+      var newOverrides = layer.overrides();
+      if (newOverrides == null) {
+        newOverrides = {};
+      }
+
+      // Create mutable copy
+      var mutableOverrides = NSMutableDictionary.dictionaryWithDictionary(newOverrides);
+      mutableOverrides.setObject_forKey(NSMutableDictionary.dictionaryWithDictionary(newOverrides.objectForKey(0)), 0);
+
+      // Change item in the overrides
+      mutableOverrides.setObject_forKey(imageData, layerOverride.objectID());
+
+      // Change overrides
+      layer.overrides = mutableOverrides; // eslint-disable-line
+    }
+  } else if (layer instanceof MSLayerGroup) {
+    layer.layers().forEach(function (subLayer) {
+      fillLayer(subLayer, files, context);
+    });
+  } else {
+    var _imageURLString = getFirstAndRemoveFromArray(files).url;
+
+    if (mask) {
+      _logger2['default'].log('Masking Layer ' + _imageURLString);
+      maskLayerWithImage(layer, _imageURLString);
+    } else {
+      _logger2['default'].log('Filling Layer ' + _imageURLString);
+      fillLayerWithImage(layer, _imageURLString);
+    }
+  }
+};
+
+// ###############################
+// Index.js
+// ###############################
+// Fill Layer
+var insertOrFillImage = function insertOrFillImage(files, _ref2) {
+  var force = _ref2.force,
+      _ref2$mask = _ref2.mask,
+      mask = _ref2$mask === undefined ? false : _ref2$mask,
+      context = _ref2.context;
+
+  _logger2['default'].log('fn: insertOrFillImage');
+
+  var selection = (0, _updateContext2['default'])().selection;
+  var selectionLength = selection.count();
+
+  _logger2['default'].log('Selected Layers ' + selectionLength);
+
+  if (selectionLength > 0) {
+    var layerOverride = void 0;
+
+    if (selectionLength > 1) {
+      // Check if all the Layers are same
+      if (hasDifferentSymbols(selection)) {
+        context.document.showMessage("Sorry! You can't fill data in different type of layers.", "Please select you have only one type of Symbol/Shape!");
+        return;
+      }
+
+      // Check if the selecte layer is Symbol then ask user which Layer needs to be replaced
+      var firstSymbolMaster = getFirstSymbolMaster(selection);
+
+      // If Images are being filled then Ask for the Shape in Symbol
+      if (firstSymbolMaster) {
+        layerOverride = askForLayerToReplaceInSymbol(firstSymbolMaster, context);
+
+        if (!layerOverride) {
+          context.document.showMessage("Sorry! You can't fill in this Symbol.", "Please make sure that the symbol you've selected has at least one Shape with Image Fill.");
+          return;
+        }
+      }
+    }
+
+    selection.forEach(function (layer) {
+      fillLayer(layer, files, context, layerOverride, mask);
+    });
+  } else if (force) {
+    insertImage(files[0], context);
+  } else {
+    context.document.showMessage("Oops! Please select one or more layers to fill and try again!");
+  }
+};
+
+exports['default'] = insertOrFillImage;
+
+// const imgfiles = [1,2,5,40,45,50,23,63,23,12].map(i => ({
+//   url: `https://photographs-dev.s3.wasabisys.com/photo/free/thumb/${i}.jpg`,
+//   name: 'tarun',
+//   format: 'jpg'
+// }))
+
+// insertOrFillImage(imgfiles, context, true)
+
+// const selection = context.selection;
+// selection.forEach(layer => {
+//   fillLayerWithImage(layer, 'https://photographs-dev.s3.wasabisys.com/photo/free/thumb/3.jpg')
+// })
+
+// selection.forEach(layer => {
+//  logger.log(layer instanceof MSRectangleShape)
+//  logger.log(layer.className());
+//})
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+module.exports = {"name":"Icondrop","identifier":"com.iconscout.sketch.icondrop","description":"Get access to 2,000,000+ Icons, Illustrations & Stock Photos right into Sketch App","version":"2.0.1","icon":"icon.png","homepage":"https://iconscout.com","author":"Iconscout","authorEmail":"support@iconscout.com","appcast":"https://raw.githubusercontent.com/Iconscout/icondrop/master/.appcast.xml","compatibleVersion":3,"bundleVersion":1,"commands":[{"name":"Icondrop","script":"./index.js","identifier":"icondrop","description":"Get access to 2,000,000+ Icons, Illustrations & Stock Photos right into Sketch App","icon":"icons/favicon-64x64.png","shortcut":"cmd shift i"}],"menu":{"items":["icondrop"],"isRoot":true}}
 
 /***/ })
 /******/ ]);
