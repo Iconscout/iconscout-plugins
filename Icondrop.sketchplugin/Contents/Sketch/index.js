@@ -65,7 +65,7 @@ var exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -347,7 +347,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _SketchPluginLog = __webpack_require__(17);
+var _SketchPluginLog = __webpack_require__(20);
 
 var _SketchPluginLog2 = _interopRequireDefault(_SketchPluginLog);
 
@@ -387,6 +387,280 @@ exports["default"] = updateContext;
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(console) {/* globals log */
+
+if (true) {
+  var sketchUtils = __webpack_require__(25)
+  var sketchDebugger = __webpack_require__(27)
+  var actions = __webpack_require__(29)
+
+  function getStack() {
+    return sketchUtils.prepareStackTrace(new Error().stack)
+  }
+}
+
+console._skpmPrefix = 'console> '
+
+function logEverywhere(type, args) {
+  var values = Array.prototype.slice.call(args)
+
+  // log to the System logs
+  values.forEach(function(v) {
+    try {
+      log(console._skpmPrefix + indentString() + v)
+    } catch (e) {
+      log(v)
+    }
+  })
+
+  if (true) {
+    if (!sketchDebugger.isDebuggerPresent()) {
+      return
+    }
+
+    var payload = {
+      ts: Date.now(),
+      type: type,
+      plugin: String(context.scriptPath),
+      values: values.map(sketchUtils.prepareValue),
+      stack: getStack(),
+    }
+
+    sketchDebugger.sendToDebugger(actions.ADD_LOG, payload)
+  }
+}
+
+var indentLevel = 0
+function indentString() {
+  var indent = ''
+  for (var i = 0; i < indentLevel; i++) {
+    indent += '  '
+  }
+  if (indentLevel > 0) {
+    indent += '| '
+  }
+  return indent
+}
+
+var oldGroup = console.group
+
+console.group = function() {
+  // log to the JS context
+  oldGroup && oldGroup.apply(this, arguments)
+  indentLevel += 1
+  if (true) {
+    sketchDebugger.sendToDebugger(actions.GROUP, {
+      plugin: String(context.scriptPath),
+      collapsed: false,
+    })
+  }
+}
+
+var oldGroupCollapsed = console.groupCollapsed
+
+console.groupCollapsed = function() {
+  // log to the JS context
+  oldGroupCollapsed && oldGroupCollapsed.apply(this, arguments)
+  indentLevel += 1
+  if (true) {
+    sketchDebugger.sendToDebugger(actions.GROUP, {
+      plugin: String(context.scriptPath),
+      collapsed: true
+    })
+  }
+}
+
+var oldGroupEnd = console.groupEnd
+
+console.groupEnd = function() {
+  // log to the JS context
+  oldGroupEnd && oldGroupEnd.apply(this, arguments)
+  indentLevel -= 1
+  if (indentLevel < 0) {
+    indentLevel = 0
+  }
+  if (true) {
+    sketchDebugger.sendToDebugger(actions.GROUP_END, {
+      plugin: context.scriptPath,
+    })
+  }
+}
+
+var counts = {}
+var oldCount = console.count
+
+console.count = function(label) {
+  label = typeof label !== 'undefined' ? label : 'Global'
+  counts[label] = (counts[label] || 0) + 1
+
+  // log to the JS context
+  oldCount && oldCount.apply(this, arguments)
+  return logEverywhere('log', [label + ': ' + counts[label]])
+}
+
+var timers = {}
+var oldTime = console.time
+
+console.time = function(label) {
+  // log to the JS context
+  oldTime && oldTime.apply(this, arguments)
+
+  label = typeof label !== 'undefined' ? label : 'default'
+  if (timers[label]) {
+    return logEverywhere('warn', ['Timer "' + label + '" already exists'])
+  }
+
+  timers[label] = Date.now()
+  return
+}
+
+var oldTimeEnd = console.timeEnd
+
+console.timeEnd = function(label) {
+  // log to the JS context
+  oldTimeEnd && oldTimeEnd.apply(this, arguments)
+
+  label = typeof label !== 'undefined' ? label : 'default'
+  if (!timers[label]) {
+    return logEverywhere('warn', ['Timer "' + label + '" does not exist'])
+  }
+
+  var duration = Date.now() - timers[label]
+  delete timers[label]
+  return logEverywhere('log', [label + ': ' + (duration / 1000) + 'ms'])
+}
+
+var oldLog = console.log
+
+console.log = function() {
+  // log to the JS context
+  oldLog && oldLog.apply(this, arguments)
+  return logEverywhere('log', arguments)
+}
+
+var oldWarn = console.warn
+
+console.warn = function() {
+  // log to the JS context
+  oldWarn && oldWarn.apply(this, arguments)
+  return logEverywhere('warn', arguments)
+}
+
+var oldError = console.error
+
+console.error = function() {
+  // log to the JS context
+  oldError && oldError.apply(this, arguments)
+  return logEverywhere('error', arguments)
+}
+
+var oldAssert = console.assert
+
+console.assert = function(condition, text) {
+  // log to the JS context
+  oldAssert && oldAssert.apply(this, arguments)
+  if (!condition) {
+    return logEverywhere('assert', [text])
+  }
+  return undefined
+}
+
+var oldInfo = console.info
+
+console.info = function() {
+  // log to the JS context
+  oldInfo && oldInfo.apply(this, arguments)
+  return logEverywhere('info', arguments)
+}
+
+var oldClear = console.clear
+
+console.clear = function() {
+  oldClear && oldClear()
+  if (true) {
+    return sketchDebugger.sendToDebugger(actions.CLEAR_LOGS)
+  }
+}
+
+console._skpmEnabled = true
+
+module.exports = console
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+/* eslint-disable no-not-accumulator-reassign/no-not-accumulator-reassign, no-var, vars-on-top, prefer-template, prefer-arrow-callback, func-names, prefer-destructuring, object-shorthand */
+
+module.exports = function prepareStackTrace(stackTrace) {
+  var stack = stackTrace.split('\n')
+  stack = stack.map(function (s) {
+    return s.replace(/\sg/, '')
+  })
+
+  stack = stack.map(function (entry) {
+    // entry is something like `functionName@path/to/my/file:line:column`
+    // or `path/to/my/file:line:column`
+    // or `path/to/my/file`
+    // or `path/to/@my/file:line:column`
+    var parts = entry.split('@')
+    var fn = parts.shift()
+    var filePath = parts.join('@') // the path can contain @
+
+    if (fn.indexOf('/Users/') === 0) {
+      // actually we didn't have a fn so just put it back in the filePath
+      filePath = fn + (filePath ? ('@' + filePath) : '')
+      fn = null
+    }
+
+    if (!filePath) {
+      // we should always have a filePath, so if we don't have one here, it means that the function what actually anonymous and that it is the filePath instead
+      filePath = entry
+      fn = null
+    }
+
+    var filePathParts = filePath.split(':')
+    filePath = filePathParts[0]
+
+    // the file is the last part of the filePath
+    var file = filePath.split('/')
+    file = file[file.length - 1]
+
+    return {
+      fn: fn,
+      file: file,
+      filePath: filePath,
+      line: filePathParts[1],
+      column: filePathParts[2],
+    }
+  })
+
+  return stack
+}
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+module.exports = function toArray(object) {
+  if (Array.isArray(object)) {
+    return object
+  }
+  var arr = []
+  for (var j = 0; j < (object || []).length; j += 1) {
+    arr.push(object[j])
+  }
+  return arr
+}
+
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -438,7 +712,7 @@ exports['default'] = function (context) {
   };
 
   var browserWindow = new _sketchModuleWebView2['default'](options);
-  browserWindow.loadURL('https://sketch.iconscout.com/' + String(_manifest2['default'].version) + '/index.html');
+  browserWindow.loadURL('https://sketch.iconscout.com/2.0.1/index.html');
   browserWindow.show();
 
   // Send Settings to Webview
@@ -509,15 +783,15 @@ exports['default'] = function (context) {
   // context.document.showMessage("It's alive 🙌")
 };
 
-var _sketch = __webpack_require__(5);
+var _sketch = __webpack_require__(8);
 
 var _sketch2 = _interopRequireDefault(_sketch);
 
-var _settings = __webpack_require__(6);
+var _settings = __webpack_require__(9);
 
 var _settings2 = _interopRequireDefault(_settings);
 
-var _sketchModuleWebView = __webpack_require__(7);
+var _sketchModuleWebView = __webpack_require__(10);
 
 var _sketchModuleWebView2 = _interopRequireDefault(_sketchModuleWebView);
 
@@ -525,44 +799,44 @@ var _logger = __webpack_require__(2);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _insert = __webpack_require__(18);
+var _insert = __webpack_require__(21);
 
 var _insert2 = _interopRequireDefault(_insert);
 
-var _Snippets = __webpack_require__(21);
+var _Snippets = __webpack_require__(24);
 
 var _Snippets2 = _interopRequireDefault(_Snippets);
 
-var _manifest = __webpack_require__(22);
+var _manifest = __webpack_require__(30);
 
 var _manifest2 = _interopRequireDefault(_manifest);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, exports) {
 
 module.exports = require("sketch");
 
 /***/ }),
-/* 6 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = require("sketch/settings");
 
 /***/ }),
-/* 7 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* let's try to match the API from Electron's Browser window
 (https://github.com/electron/electron/blob/master/docs/api/browser-window.md) */
 var EventEmitter = __webpack_require__(1)
-var buildBrowserAPI = __webpack_require__(8)
-var buildWebAPI = __webpack_require__(9)
-var fitSubviewToView = __webpack_require__(10)
-var dispatchFirstClick = __webpack_require__(11)
-var setDelegates = __webpack_require__(12)
+var buildBrowserAPI = __webpack_require__(11)
+var buildWebAPI = __webpack_require__(12)
+var fitSubviewToView = __webpack_require__(13)
+var dispatchFirstClick = __webpack_require__(14)
+var setDelegates = __webpack_require__(15)
 
 function BrowserWindow(options) {
   options = options || {}
@@ -859,7 +1133,7 @@ module.exports = BrowserWindow
 
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, exports) {
 
 var COLOR_CLASSES = [
@@ -1437,7 +1711,7 @@ module.exports = function(browserWindow, panel, webview) {
 
 
 /***/ }),
-/* 9 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var EventEmitter = __webpack_require__(1)
@@ -1485,7 +1759,7 @@ module.exports = function buildAPI(browserWindow, panel, webview) {
 
 
 /***/ }),
-/* 10 */
+/* 13 */
 /***/ (function(module, exports) {
 
 function addEdgeConstraint(edge, subview, view, constant) {
@@ -1513,7 +1787,7 @@ module.exports = function fitSubviewToView(subview, view, constants) {
 
 
 /***/ }),
-/* 11 */
+/* 14 */
 /***/ (function(module, exports) {
 
 var tagsToFocus =
@@ -1543,12 +1817,12 @@ module.exports = function(webView, event) {
 
 
 /***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ObjCClass = __webpack_require__(13).default
-var parseWebArguments = __webpack_require__(15)
-var CONSTANTS = __webpack_require__(16)
+var ObjCClass = __webpack_require__(16).default
+var parseWebArguments = __webpack_require__(18)
+var CONSTANTS = __webpack_require__(19)
 
 // We create one ObjC class for ourselves here
 var WindowDelegateClass
@@ -1773,7 +2047,7 @@ module.exports = function(browserWindow, panel, webview) {
 
 
 /***/ }),
-/* 13 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1785,7 +2059,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.SuperCall = undefined;
 exports.default = ObjCClass;
 
-var _runtime = __webpack_require__(14);
+var _runtime = __webpack_require__(17);
 
 exports.SuperCall = _runtime.SuperCall;
 
@@ -1841,7 +2115,7 @@ function getIvar(obj, name) {
 }
 
 /***/ }),
-/* 14 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1951,7 +2225,7 @@ const object_setInstanceVariable = exports.object_setInstanceVariable = CFunc("o
 addStructToBridgeSupport('objc_super', { type: objc_super_typeEncoding });
 
 /***/ }),
-/* 15 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = function(webArguments) {
@@ -1976,7 +2250,7 @@ module.exports = function(webArguments) {
 
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -1985,7 +2259,7 @@ module.exports = {
 
 
 /***/ }),
-/* 17 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2218,7 +2492,7 @@ exports['default'] = SketchPluginLog;
 // };
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2232,7 +2506,7 @@ var _dom = __webpack_require__(0);
 
 var _dom2 = _interopRequireDefault(_dom);
 
-var _insertSVG = __webpack_require__(19);
+var _insertSVG = __webpack_require__(22);
 
 var _insertSVG2 = _interopRequireDefault(_insertSVG);
 
@@ -2284,7 +2558,7 @@ var insertSVGs = function insertSVGs(files, _ref) {
 exports['default'] = insertSVGs;
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2294,7 +2568,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _getFrameSize = __webpack_require__(20);
+var _getFrameSize = __webpack_require__(23);
 
 var _getFrameSize2 = _interopRequireDefault(_getFrameSize);
 
@@ -2355,7 +2629,7 @@ var replaceWithSVG = function replaceWithSVG(selected, _ref, context) {
 exports['default'] = replaceWithSVG;
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2395,11 +2669,11 @@ var getFrameSizing = function getFrameSizing(width, height, selectedObject, cont
 exports["default"] = getFrameSizing;
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(console) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -2507,17 +2781,31 @@ var askForLayerToReplaceInSymbol = function askForLayerToReplaceInSymbol(master,
 var fetchImageData = function fetchImageData(url) {
   _logger2['default'].log('fn: fetchImageData');
 
-  var nsUrl = NSURL.alloc().initWithString(url);
-  var newImage = NSImage.alloc().initByReferencingURL(nsUrl);
-  var imageData = null;
+  var request = NSURLRequest.requestWithURL(NSURL.URLWithString(url));
+  var responsePtr = MOPointer.alloc().init();
+  var errorPtr = MOPointer.alloc().init();
 
-  if (MSApplicationMetadata.metadata().appVersion < 47) {
-    imageData = MSImageData.alloc().initWithImage_convertColorSpace(newImage, false);
-  } else {
-    imageData = MSImageData.alloc().initWithImage(newImage);
+  var data = NSURLConnection.sendSynchronousRequest_returningResponse_error(request, responsePtr, errorPtr);
+  if (errorPtr.value() != null) {
+    print(errorPtr.value());
+    return null;
   }
-  return imageData;
+
+  var response = responsePtr.value();
+  if (response.statusCode() != 200) {
+    return null;
+  }
+
+  var mimeType = response.allHeaderFields()["Content-Type"];
+  console.log(mimeType);
+  if (!mimeType || !mimeType.hasPrefix("image/")) {
+    return null;
+  }
+
+  var newImage = NSImage.alloc().initWithData(data);
+  return MSImageData.alloc().initWithImage(newImage);
 };
+
 // Fill Layer with Image
 var fillLayerWithImage = function fillLayerWithImage(layer, url) {
   _logger2['default'].log('fn: fillLayerWithImage');
@@ -2548,7 +2836,7 @@ var insertImage = function insertImage(_ref, context) {
       name = _ref.name;
 
   _logger2['default'].log('fn: insertImage');
-  _logger2['default'].log(context.api());
+
   var selectedPage = context.api().selectedDocument.selectedPage._object;
   var image = fetchImageData(url);
   var layerImage = MSBitmapLayer.alloc().initWithFrame_image(NSMakeRect(0, 0, 500, 500), image);
@@ -2780,12 +3068,275 @@ exports['default'] = insertOrFillImage;
 //  logger.log(layer instanceof MSRectangleShape)
 //  logger.log(layer.className());
 //})
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
-/* 22 */
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var prepareValue = __webpack_require__(26)
+
+module.exports.toArray = __webpack_require__(6)
+module.exports.prepareStackTrace = __webpack_require__(5)
+module.exports.prepareValue = prepareValue
+module.exports.prepareObject = prepareValue.prepareObject
+module.exports.prepareArray = prepareValue.prepareArray
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* eslint-disable no-not-accumulator-reassign/no-not-accumulator-reassign, no-var, vars-on-top, prefer-template, prefer-arrow-callback, func-names, prefer-destructuring, object-shorthand */
+var prepareStackTrace = __webpack_require__(5)
+var toArray = __webpack_require__(6)
+
+function prepareArray(array, options) {
+  return array.map(function(i) {
+    return prepareValue(i, options)
+  })
+}
+
+function prepareObject(object, options) {
+  const deep = {}
+  Object.keys(object).forEach(function(key) {
+    deep[key] = prepareValue(object[key], options)
+  })
+  return deep
+}
+
+function getName(x) {
+  return {
+    type: 'String',
+    primitive: 'String',
+    value: String(x.name()),
+  }
+}
+
+function getSelector(x) {
+  return {
+    type: 'String',
+    primitive: 'String',
+    value: String(x.selector()),
+  }
+}
+
+function introspectMochaObject(value, options) {
+  options = options || {}
+  var mocha = value.class().mocha()
+  var introspection = {
+    properties: {
+      type: 'Array',
+      primitive: 'Array',
+      value: toArray(
+        mocha['properties' + (options.withAncestors ? 'WithAncestors' : '')]()
+      ).map(getName),
+    },
+    classMethods: {
+      type: 'Array',
+      primitive: 'Array',
+      value: toArray(
+        mocha['classMethods' + (options.withAncestors ? 'WithAncestors' : '')]()
+      ).map(getSelector),
+    },
+    instanceMethods: {
+      type: 'Array',
+      primitive: 'Array',
+      value: toArray(
+        mocha['instanceMethods' + (options.withAncestors ? 'WithAncestors' : '')]()
+      ).map(getSelector),
+    },
+    protocols: {
+      type: 'Array',
+      primitive: 'Array',
+      value: toArray(
+        mocha['protocols' + (options.withAncestors ? 'WithAncestors' : '')]()
+      ).map(getName),
+    },
+  }
+  if (mocha.treeAsDictionary && options.withTree) {
+    introspection.treeAsDictionary = {
+      type: 'Object',
+      primitive: 'Object',
+      value: prepareObject(mocha.treeAsDictionary())
+    }
+  }
+  return introspection
+}
+
+function prepareValue(value, options) {
+  var type = 'String'
+  var primitive = 'String'
+  const typeOf = typeof value
+  if (value instanceof Error) {
+    type = 'Error'
+    primitive = 'Error'
+    value = {
+      message: value.message,
+      name: value.name,
+      stack: prepareStackTrace(value.stack),
+    }
+  } else if (Array.isArray(value)) {
+    type = 'Array'
+    primitive = 'Array'
+    value = prepareArray(value, options)
+  } else if (value === null || value === undefined || Number.isNaN(value)) {
+    type = 'Empty'
+    primitive = 'Empty'
+    value = String(value)
+  } else if (typeOf === 'object') {
+    if (value.isKindOfClass && typeof value.class === 'function') {
+      type = String(value.class())
+      // TODO: Here could come some meta data saved as value
+      if (
+        type === 'NSDictionary' ||
+        type === '__NSDictionaryM' ||
+        type === '__NSSingleEntryDictionaryI' ||
+        type === '__NSDictionaryI' ||
+        type === '__NSCFDictionary'
+      ) {
+        primitive = 'Object'
+        value = prepareObject(Object(value), options)
+      } else if (
+        type === 'NSArray' ||
+        type === 'NSMutableArray' ||
+        type === '__NSArrayM' ||
+        type === '__NSSingleObjectArrayI' ||
+        type === '__NSArray0'
+      ) {
+        primitive = 'Array'
+        value = prepareArray(toArray(value), options)
+      } else if (
+        type === 'NSString' ||
+        type === '__NSCFString' ||
+        type === 'NSTaggedPointerString' ||
+        type === '__NSCFConstantString'
+      ) {
+        primitive = 'String'
+        value = String(value)
+      } else if (type === '__NSCFNumber' || type === 'NSNumber') {
+        primitive = 'Number'
+        value = 0 + value
+      } else if (type === 'MOStruct') {
+        type = String(value.name())
+        primitive = 'Object'
+        value = value.memberNames().reduce(function(prev, k) {
+          prev[k] = prepareValue(value[k], options)
+          return prev
+        }, {})
+      } else if (value.class().mocha) {
+        primitive = 'Mocha'
+        value = (options || {}).skipMocha ? type : introspectMochaObject(value, options)
+      } else {
+        primitive = 'Unknown'
+        value = type
+      }
+    } else {
+      type = 'Object'
+      primitive = 'Object'
+      value = prepareObject(value, options)
+    }
+  } else if (typeOf === 'function') {
+    type = 'Function'
+    primitive = 'Function'
+    value = String(value)
+  } else if (value === true || value === false) {
+    type = 'Boolean'
+    primitive = 'Boolean'
+  } else if (typeOf === 'number') {
+    primitive = 'Number'
+    type = 'Number'
+  }
+
+  return {
+    value,
+    type,
+    primitive,
+  }
+}
+
+module.exports = prepareValue
+module.exports.prepareObject = prepareObject
+module.exports.prepareArray = prepareArray
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* eslint-disable no-not-accumulator-reassign/no-not-accumulator-reassign, no-var, vars-on-top, prefer-template, prefer-arrow-callback, func-names, prefer-destructuring, object-shorthand */
+var remoteWebview = __webpack_require__(28)
+
+module.exports.identifier = 'skpm.debugger'
+
+module.exports.isDebuggerPresent = remoteWebview.isWebviewPresent.bind(
+  this,
+  module.exports.identifier
+)
+
+module.exports.sendToDebugger = function sendToDebugger(name, payload) {
+  return remoteWebview.sendToWebview(
+    module.exports.identifier,
+    'sketchBridge(' +
+      JSON.stringify({
+        name: name,
+        payload: payload,
+      }) +
+      ');'
+  )
+}
+
+
+/***/ }),
+/* 28 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"Icondrop","identifier":"com.iconscout.sketch.icondrop","description":"Get access to 2,000,000+ Icons, Illustrations & Stock Photos right into Sketch App","version":"2.0.1","icon":"icon.png","homepage":"https://iconscout.com","author":"Iconscout","authorEmail":"support@iconscout.com","appcast":"https://raw.githubusercontent.com/Iconscout/icondrop/master/.appcast.xml","compatibleVersion":3,"bundleVersion":1,"commands":[{"name":"Icondrop","script":"./index.js","identifier":"icondrop","description":"Get access to 2,000,000+ Icons, Illustrations & Stock Photos right into Sketch App","icon":"icons/favicon-64x64.png","shortcut":"cmd shift i"}],"menu":{"items":["icondrop"],"isRoot":true}}
+/* globals NSThread */
+
+var threadDictionary = NSThread.mainThread().threadDictionary()
+
+module.exports.isWebviewPresent = function isWebviewPresent (identifier) {
+  return !!threadDictionary[identifier]
+}
+
+module.exports.sendToWebview = function sendToWebview (identifier, evalString) {
+  if (!module.exports.isWebviewPresent(identifier)) {
+    throw new Error('Webview ' + identifier + ' not found')
+  }
+
+  var webview = threadDictionary[identifier]
+    .contentView()
+    .subviews()
+  webview = webview[webview.length - 1]
+
+  return webview.stringByEvaluatingJavaScriptFromString(evalString)
+}
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports) {
+
+module.exports.SET_TREE = 'elements/SET_TREE'
+module.exports.SET_PAGE_METADATA = 'elements/SET_PAGE_METADATA'
+module.exports.SET_LAYER_METADATA = 'elements/SET_LAYER_METADATA'
+module.exports.ADD_LOG = 'logs/ADD_LOG'
+module.exports.CLEAR_LOGS = 'logs/CLEAR_LOGS'
+module.exports.GROUP = 'logs/GROUP'
+module.exports.GROUP_END = 'logs/GROUP_END'
+module.exports.TIMER_START = 'logs/TIMER_START'
+module.exports.TIMER_END = 'logs/TIMER_END'
+module.exports.ADD_REQUEST = 'network/ADD_REQUEST'
+module.exports.SET_RESPONSE = 'network/SET_RESPONSE'
+module.exports.ADD_ACTION = 'actions/ADD_ACTION'
+module.exports.SET_SCRIPT_RESULT = 'playground/SET_SCRIPT_RESULT'
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+module.exports = {"name":"Icondrop","identifier":"com.iconscout.sketch.icondrop","description":"Get access to 2,000,000+ Icons, Illustrations & Stock Photos right into Sketch App","version":"2.0.1.1","icon":"icon.png","homepage":"https://iconscout.com","author":"Iconscout","authorEmail":"support@iconscout.com","appcast":"https://raw.githubusercontent.com/Iconscout/icondrop/master/.appcast.xml","compatibleVersion":3,"bundleVersion":1,"commands":[{"name":"Icondrop","script":"./index.js","identifier":"icondrop","description":"Get access to 2,000,000+ Icons, Illustrations & Stock Photos right into Sketch App","icon":"icons/favicon-64x64.png","shortcut":"cmd shift i"}],"menu":{"items":["icondrop"],"isRoot":true}}
 
 /***/ })
 /******/ ]);
