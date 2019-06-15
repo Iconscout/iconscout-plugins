@@ -18,7 +18,7 @@ A **Sketch Plugin & Adobe CC Extension (Photoshop & Illustrator)** to Enhance yo
 </a>
 
 ### Manual Install
-1. Download and open **[Icondrop-master.zip](https://github.com/Iconscout/icondrop/archive/master.zip)**.
+1. Download plugin from **[here](https://github.com/Iconscout/icondrop/releases)**.
 2. Double click on **Icondrop.sketchplugin** to install.  
 
 ### Usage
@@ -30,11 +30,11 @@ A **Sketch Plugin & Adobe CC Extension (Photoshop & Illustrator)** to Enhance yo
 
 ## How to - Adobe CC
 ### Install on Mac
-1. Download and open **[Icondrop.pkg](bin/Icondrop.pkg)**.
+1. Download and open **[Icondrop.pkg](https://github.com/Iconscout/icondrop/releases)**.
 2. Double click on **Icondrop.pkg** to install.  
 
 ### Install on Windows
-1. Download and open **[Icondrop.exe](bin/Icondrop.exe)**.
+1. Download and open **[Icondrop.exe](https://github.com/Iconscout/icondrop/releases)**.
 2. Double click on **Icondrop.exe** to install.  
 
 <a href="https://iconscout.com/blog/icondrop-how-to-install-and-use/?utm_source=github">View our instructions</a> for installation and how to use.
@@ -45,12 +45,6 @@ A **Sketch Plugin & Adobe CC Extension (Photoshop & Illustrator)** to Enhance yo
 3. Search for Icon you want (Home, Business, Finance, etc.)
 4. Hover the Icon you want to insert and click `Download Icon`.
 5. Upgrade to our <a href="https://iconscout.com/pro-plans?utm_source=icondrop">Iconscout Pro Plans</a> to download unlimited premium icons.
-
-## Log
-| Version | Notes |
-| --- | --- |
-| **v1.0.1** |  Minor Bug Fixes and launched Adobe Plugin. |
-| **v1.0.0** |  First Release. |
 
 ### Powered by
 <a href="https://iconscout.com/?utm_source=icondrop">
