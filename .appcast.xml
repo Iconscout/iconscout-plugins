@@ -6,6 +6,24 @@
     <description>Get access to 2 million+ icons, Illustrations & Stock Photos right into Sketch App</description>
     <language>en</language>
     <item>
+      <title>2.2.1</title>
+      <description>
+        <![CDATA[
+          <ul>
+            <li>Import Format Support for Illustrations & Photos</li>
+            <li>Update the plugin and get public access of Myscout:</li>
+            <li>Exciting features of Myscout:</li>
+            <li>All new user interface</li>
+            <li>Sync your assets directly from the tool</li>
+            <li>Automatic file conversion</li>
+            <li>Advance team sharing</li>
+          </ul>
+        ]]>
+      </description>
+      <pubDate>Tue, 27 Aug 2019 08:56:19 +0000</pubDate>
+      <enclosure url="https://github.com/Iconscout/icondrop/releases/download/2.2.1/Icondrop.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
+    </item>
+    <item>
       <title>2.2.0</title>
       <description>
         <![CDATA[
