@@ -25,7 +25,7 @@ Download it from [Adobe Xd Plugin Store](https://xd.adobelanding.com/en/xd-plugi
 2. Run the plugin from the `plugins` menu or you can use the shortcut `cmd + shift + i`
 3. Search for Icon you want (Home, Business, Finance, etc.)
 4. Hover the Icon you want to insert and click `Use This`.
-5. If you have <a href="https://iconscout.com/pro-plans?utm_source=icondrop">Iconscout Pro Subscription</a>, you can enjoy all premium icons in vector format.
+5. If you have <a href="https://iconscout.com/plans-and-pricing?code=GITHUB80&utm_source=github&utm_medium=icondrop&utm_campaign=GITHUB80">Iconscout Pro Subscription</a>, you can enjoy all premium icons in vector format.
 
 ### Adobe Photoshop, Illustrator and InDesign
 #### Install on Mac
@@ -43,7 +43,7 @@ Download it from [Adobe Xd Plugin Store](https://xd.adobelanding.com/en/xd-plugi
 2. Open Extension from the `Window` > `Extensions` > `Iconscout`.
 3. Search for Icon you want (Home, Business, Finance, etc.)
 4. Hover the Icon you want to insert and click `Download Icon`.
-5. Upgrade to our <a href="https://iconscout.com/pro-plans?utm_source=icondrop">Iconscout Pro Plans</a> to download unlimited premium icons.
+5. Upgrade to our <a href="https://iconscout.com/plans-and-pricing?code=GITHUB80&utm_source=github&utm_medium=icondrop&utm_campaign=GITHUB80">Iconscout Pro Plans</a> to download unlimited premium icons.
 
 ## Powered by
 <a href="https://iconscout.com/?utm_source=icondrop">
