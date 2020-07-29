@@ -21,7 +21,7 @@ An **Adobe Photoshop and Illustrator Extension** to Enhance your designs with hi
 2. Open Extension from the `Window` > `Extensions` > `Iconscout`.
 3. Search for Icon you want (Home, Business, Finance, etc.)
 4. Hover the Icon you want to insert and click `Download Icon`.
-5. Upgrade to our <a href="https://iconscout.com/pro-plans?utm_source=icondrop">Iconscout Pro Plans</a> to download unlimited premium icons.
+5. Upgrade to our <a href="https://iconscout.com/plans-and-pricing?code=GITHUB80&utm_source=github&utm_medium=icondrop&utm_campaign=GITHUB80">Iconscout Pro Plans</a> to download unlimited premium icons.
 
 ### Log
 | Version | Notes |
