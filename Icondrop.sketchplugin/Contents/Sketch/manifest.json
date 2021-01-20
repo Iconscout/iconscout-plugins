@@ -1,40 +1,34 @@
 {
-  "name": "Icondrop",
-  "identifier": "com.iconscout.sketch.icondrop",
-  "description": "Get access to 2,000,000+ Icons, Illustrations & Stock Photos right into Sketch App",
-  "version": "2.2.1",
+  "name": "Iconscout",
   "icon": "icon.png",
+  "description": "Get access to 2,000,000+ Icons, Illustrations & 3D Illustrations right into Sketch App",
   "homepage": "https://iconscout.com",
   "author": "Iconscout",
   "authorEmail": "support@iconscout.com",
-  "appcast": "https://raw.githubusercontent.com/Iconscout/icondrop/master/.appcast.xml",
   "compatibleVersion": 3,
   "bundleVersion": 1,
   "commands": [
     {
-      "name": "Icondrop",
-      "script": "index.js",
-      "identifier": "icondrop",
-      "description": "Get access to 2,000,000+ Icons, Illustrations & Stock Photos right into Sketch App",
-      "icon": "icons/favicon-64x64.png",
-      "shortcut": "cmd shift i"
-    },
-    {
-      "name": "Iconscout Selection Changed",
-      "identifier": "selection-changed",
-      "script": "selection-changed.js",
+      "name": "Iconscout",
+      "identifier": "iconscout.index",
+      "script": "__index.js",
+      "shortcut": "cmd shift i",
       "handlers": {
+        "run": "onRun",
         "actions": {
-          "SelectionChanged.finish": "onSelectionChanged"
+          "Shutdown": "onShutdown"
         }
       }
     }
   ],
   "menu": {
     "items": [
-      "icondrop"
+      "iconscout.index"
     ],
     "isRoot": true
   },
-  "disableCocoaScriptPreprocessor": true
+  "version": "2.3.0",
+  "identifier": "iconscout",
+  "disableCocoaScriptPreprocessor": true,
+  "appcast": "https://raw.githubusercontent.com/Iconscout/icondrop/master/.appcast.xml"
 }
