@@ -1,15 +1,15 @@
 {
-  "name": "Iconscout",
+  "name": "IconScout - Icons, Illustrations & 3D Assets",
   "icon": "icon.png",
-  "description": "Get access to 2,000,000+ Icons, Illustrations & 3D Illustrations right into Sketch App",
+  "description": "Get access to 4.4 Million+ Icons, Illustrations & 3D Assets right into Sketch App",
   "homepage": "https://iconscout.com",
-  "author": "Iconscout",
+  "author": "IconScout",
   "authorEmail": "support@iconscout.com",
   "compatibleVersion": 3,
   "bundleVersion": 1,
   "commands": [
     {
-      "name": "Iconscout",
+      "name": "IconScout",
       "identifier": "iconscout.index",
       "script": "__index.js",
       "shortcut": "cmd shift i",
@@ -27,8 +27,8 @@
     ],
     "isRoot": true
   },
-  "version": "2.3.0",
-  "identifier": "iconscout",
+  "version": "2.4.2",
+  "identifier": "IconScout",
   "disableCocoaScriptPreprocessor": true,
-  "appcast": "https://raw.githubusercontent.com/Iconscout/icondrop/master/.appcast.xml"
+  "appcast": "https://raw.githubusercontent.com/Iconscout/iconscout-plugins/master/.appcast.xml"
 }

@@ -1,12 +1,12 @@
-# Icondrop by Iconscout
-Get access to 2 million+ design resources such as icons, illustration and stock photos right inside Sketch, Figma, Adobe Xd, Microsoft Office, G Suite and many more. Icondrop is powered by [Iconscout](https://iconscout.com/?utm_source=icondrop).
+# IconScout by Iconscout
+Get access to 2 million+ design resources such as icons, illustration and stock photos right inside Sketch, Figma, Adobe Xd, Microsoft Office, G Suite and many more. IconScout is powered by [Iconscout](https://iconscout.com/?utm_source=icondrop).
 
 <a href="https://iconscout.com/icondrop?utm_source=icondrop">
-	<img src="Icondrop-sketch-cover.png?raw=true" alt="Icondrop Sketch Plugin by Iconscout" width="400" /><img src="Icondrop-adobe-cover.png?raw=true" alt="Icondrop Adobe Plugin by Iconscout" width="400" />
+	<img src="IconScout-sketch-cover.png?raw=true" alt="IconScout Sketch Plugin by Iconscout" width="400" /><img src="IconScout-adobe-cover.png?raw=true" alt="IconScout Adobe Plugin by Iconscout" width="400" />
 </a>
 
 <a href="https://iconscout.com/icondrop?utm_source=icondrop">
-	<img src="Icondrop.gif?raw=true" alt="Icondrop Sketch Plugin by Iconscout" width="480" />
+	<img src="IconScout.gif?raw=true" alt="IconScout Sketch Plugin by Iconscout" width="480" />
 </a>
 
 ## How to Install
@@ -17,8 +17,8 @@ Download it from [Figma Plugin Store](https://www.figma.com/c/plugin/74409870493
 Download it from [Adobe Xd Plugin Store](https://xd.adobelanding.com/en/xd-plugin-download/?name=570d8b62)
 
 ### Sketch
-1. Download plugin from **[here](https://github.com/Iconscout/icondrop/releases)**.
-2. Double click on **Icondrop.sketchplugin** to install.  
+1. Download plugin from **[here](https://github.com/Iconscout/iconscout-plugins/releases)**.
+2. Double click on **IconScout.sketchplugin** to install.  
 
 #### How to Use
 1. Select Shape Layer (which will be replaced by Icon)
@@ -29,12 +29,12 @@ Download it from [Adobe Xd Plugin Store](https://xd.adobelanding.com/en/xd-plugi
 
 ### Adobe Photoshop, Illustrator and InDesign
 #### Install on Mac
-1. Download and open **[Icondrop.pkg](https://github.com/Iconscout/icondrop/releases)**.
-2. Double click on **Icondrop.pkg** to install.  
+1. Download and open **[IconScout.pkg](https://github.com/Iconscout/iconscout-plugins/releases)**.
+2. Double click on **IconScout.pkg** to install.  
 
 #### Install on Windows
-1. Download and open **[Icondrop.exe](https://github.com/Iconscout/icondrop/releases)**.
-2. Double click on **Icondrop.exe** to install.  
+1. Download and open **[IconScout.exe](https://github.com/Iconscout/iconscout-plugins/releases)**.
+2. Double click on **IconScout.exe** to install.  
 
 <a href="https://iconscout.com/blog/icondrop-how-to-install-and-use/?utm_source=github">View our instructions</a> for installation and how to use.
 
@@ -51,8 +51,8 @@ Download it from [Adobe Xd Plugin Store](https://xd.adobelanding.com/en/xd-plugi
 </a>
 
 ## License
-Icondrop is released under the MIT license.  
-See [LICENSE](https://github.com/Iconscout/icondrop/blob/master/LICENSE/) for details.
+IconScout is released under the MIT license.  
+See [LICENSE](https://github.com/Iconscout/iconscout-plugins/blob/master/LICENSE/) for details.
 
 ## Support 
 * Website: [iconscout.com](https://iconscout.com/?utm_source=icondrop)
