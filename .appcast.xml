@@ -1,125 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
-  <channel>
-    <title>IconScout by Iconscout</title>
-    <link>https://raw.githubusercontent.com/Iconscout/iconscout-plugins/master/.appcast.xml</link>
-    <description>Get access to 2 million+ icons, Illustrations & Stock Photos right into Sketch App</description>
-    <language>en</language>
-    <item>
-      <title>2.2.1</title>
-      <description>
-        <![CDATA[
-          <ul>
-            <li>Import Format Support for Illustrations & Photos</li>
-            <li>Update the plugin and get public access of Myscout:</li>
-            <li>Exciting features of Myscout:</li>
-            <li>All new user interface</li>
-            <li>Sync your assets directly from the tool</li>
-            <li>Automatic file conversion</li>
-            <li>Advance team sharing</li>
-          </ul>
-        ]]>
-      </description>
-      <pubDate>Tue, 27 Aug 2019 08:56:19 +0000</pubDate>
-      <enclosure url="https://github.com/Iconscout/iconscout-plugins/releases/download/2.2.1/IconScout.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
-    </item>
-    <item>
-      <title>2.2.0</title>
-      <description>
-        <![CDATA[
-          <ul>
-            <li>Update the plugin and get public access of Myscout:</li>
-            <li>Exciting features of Myscout:</li>
-            <li>All new user interface</li>
-            <li>Sync your assets directly from the tool</li>
-            <li>Automatic file conversion</li>
-            <li>Advance team sharing</li>
-          </ul>
-        ]]>
-      </description>
-      <pubDate>Wed, 21 Aug 2019 05:13:10 +0000</pubDate>
-      <enclosure url="https://github.com/Iconscout/iconscout-plugins/releases/download/2.2.0/IconScout.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
-    </item>
-    <item>
-      <title>2.1.0</title>
-      <description>
-        <![CDATA[
-          <ul>
-            <li>Update the plugin and get beta access of Myscout:</li>
-            <li>Exciting features of Myscout:</li>
-            <li>Upload your private design assets</li>
-            <li>Manage and Share assets with others</li>
-            <li>Access your assets inside your favorite tools</li>
-          </ul>
-        ]]>
-      </description>
-      <pubDate>Thu, 04 April 2019 00:00:00 +0000</pubDate>
-      <enclosure url="https://github.com/Iconscout/iconscout-plugins/releases/download/2.1.0/IconScout.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
-    </item>
-    <item>
-      <title>2.0.1.1</title>
-      <description>
-        <![CDATA[
-          <ul>
-            <li>Bug Fixes</li>
-          </ul>
-        ]]>
-      </description>
-      <pubDate>Thu, 28 February 2019 00:00:00 +0000</pubDate>
-      <enclosure url="https://github.com/Iconscout/iconscout-plugins/releases/download/2.0.1.1/IconScout.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
-    </item>
-    <item>
-      <title>2.0.1</title>
-      <description>
-        <![CDATA[
-          <ul>
-            <li>New Feature: Fill & Masking to Shape</li>
-          </ul>
-        ]]>
-      </description>
-      <pubDate>Tue, 06 December 2018 00:00:00 +0000</pubDate>
-      <enclosure url="https://github.com/Iconscout/iconscout-plugins/releases/download/2.0.1/IconScout.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
-    </item>
-    <item>
-      <title>2.0.0</title>
-      <description>
-        <![CDATA[
-          <ul>
-            <li>With release of Illustrations and Stock photos, access all the design resource in a single plugin.</li>
-            <li>Introducing Prototype Mode.</li>
-            <li>Pick you favorite designers and search from their profile easily.</li>
-            <li>Now support for dark mode.</li>
-          </ul>
-        ]]>
-      </description>
-      <pubDate>Tue, 25 September 2018 11:08:42 +0000</pubDate>
-      <enclosure url="https://github.com/Iconscout/iconscout-plugins/releases/download/2.0.0/IconScout.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
-    </item>
-    <item>
-      <title>1.0.1</title>
-      <description>
-        <![CDATA[
-          <ul>
-            <li>Minor Bug Fixes</li>
-            <li>Bug fix - Plugin not loading</li>
-            <li>Bug fix - Icons not loading for some users</li>
-          </ul>
-        ]]>
-      </description>
-      <pubDate>Mon, 29 August 2017 11:08:42 +0000</pubDate>
-      <enclosure url="https://github.com/Iconscout/iconscout-plugins/releases/download/1.0.1/IconScout.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
-    </item>
-    <item>
-      <title>1.0.0</title>
-      <description>
-        <![CDATA[
-          <ul>
-            <li>First release of IconScout by Iconscout</li>
-          </ul>
-        ]]>
-      </description>
-      <pubDate>Mon, 20 July 2017 12:10:42 +0000</pubDate>
-      <enclosure url="https://github.com/Iconscout/iconscout-plugins/releases/download/1.0.0/IconScout.sketchplugin.zip" type="application/octet-stream" sparkle:version="1.0"/>
-    </item>
-  </channel>
+<rss version="2.0"
+	xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
+	xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<channel>
+		<title>IconScout</title>
+		<link>https://raw.githubusercontent.com/Iconscout/iconscout-plugins/master/.appcast.xml</link>
+		<description>Get access to 4.4 Million+ Icons, Illustrations &amp; 3D Assets right into Sketch App</description>
+		<language>en</language>
+		<item>
+			<title>Sketch Plugin with New Branding</title>
+			<enclosure url="hhttps://github.com/Iconscout/iconscout-plugins/releases/download/v2.4.2/IconScout.sketchplugin.zip" sparkle:version="2.4.2"/>
+		</item>
+	</channel>
 </rss>
